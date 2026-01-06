@@ -522,11 +522,22 @@
         <div id="single-tab" class="card hidden">
             <h2>Přidat jednu otázku</h2>
             <form id="questionForm" onsubmit="submitQuestion(event)">
-                <div class="form-group">
-                    <label>Kategorie</label>
-                    <select id="categorySelect" required>
-                        <option value="">Vyber...</option>
-                    </select>
+                <div style="display:flex;gap:10px;">
+                    <div class="form-group" style="flex:2;">
+                        <label>Kategorie</label>
+                        <select id="categorySelect" required>
+                            <option value="">Vyber...</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label>Obtížnost</label>
+                        <select id="difficultySelect" required>
+                            <option value="1">⭐ Začátečník</option>
+                            <option value="2">⭐⭐ Mírně pokročilý</option>
+                            <option value="3">⭐⭐⭐ Pokročilý</option>
+                            <option value="4">⭐⭐⭐⭐ Expert</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Otázka</label>
@@ -840,7 +851,7 @@
                     const qRes = await supabasePost('questions', {
                         category_id: q.categoryId,
                         question_text: q.questionText,
-                        difficulty: 1,
+                        difficulty: q.difficulty || 1,
                         time_limit_seconds: 30
                     });
                     if (qRes && qRes[0]) {
@@ -864,7 +875,8 @@
             const data = {
                 category_id: document.getElementById('categorySelect').value,
                 question_text: document.getElementById('questionText').value,
-                difficulty: 1, time_limit_seconds: 30
+                difficulty: parseInt(document.getElementById('difficultySelect').value) || 1,
+                time_limit_seconds: 30
             };
             const answers = [0, 1, 2, 3].map(i => document.getElementById('answer' + i).value);
             const correct = parseInt(document.querySelector('input[name="correct"]:checked').value);
