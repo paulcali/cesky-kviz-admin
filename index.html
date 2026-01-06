@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="cs">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,272 +11,293 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #FFF8F0 0%, #F5EDE4 100%);
             min-height: 100vh;
             padding: 20px;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
         }
-        
+
         header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
-        
+
         h1 {
             color: #8B4D3B;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 2rem;
+            margin-bottom: 8px;
         }
-        
+
         .subtitle {
             color: #666;
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
-        
+
         .card {
             background: white;
             border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
-        
+
         .card h2 {
             color: #333;
-            margin-bottom: 16px;
-            font-size: 1.3rem;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
         }
-        
+
         .tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
         }
-        
+
         .tab {
-            padding: 12px 24px;
+            padding: 10px 20px;
             border: none;
             background: #f0f0f0;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: all 0.2s;
         }
-        
+
         .tab.active {
             background: #8B4D3B;
             color: white;
         }
-        
+
         .tab:hover:not(.active) {
             background: #e0e0e0;
         }
-        
-        /* Upload section */
+
         .upload-area {
             border: 2px dashed #ccc;
             border-radius: 12px;
-            padding: 40px;
+            padding: 30px;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
         }
-        
-        .upload-area:hover {
-            border-color: #8B4D3B;
-            background: #FFF8F0;
-        }
-        
+
+        .upload-area:hover,
         .upload-area.dragover {
             border-color: #8B4D3B;
             background: #FFF8F0;
         }
-        
+
         #fileInput {
             display: none;
         }
-        
-        /* Form */
+
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
-        
+
         label {
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
             font-weight: 500;
             color: #333;
         }
-        
-        input, select, textarea {
+
+        input,
+        select,
+        textarea {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border: 1px solid #ddd;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
-        
-        input:focus, select:focus, textarea:focus {
+
+        input:focus,
+        select:focus,
+        textarea:focus {
             outline: none;
             border-color: #8B4D3B;
         }
-        
+
         .answers-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
         }
-        
+
         .answer-input {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
-        
+
         .answer-input input[type="text"] {
             flex: 1;
         }
-        
+
         .answer-input input[type="radio"] {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
         }
-        
+
         .btn {
-            padding: 14px 28px;
+            padding: 12px 24px;
             border: none;
             border-radius: 10px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
-        
+
         .btn-primary {
             background: #8B4D3B;
             color: white;
         }
-        
+
         .btn-primary:hover {
             background: #6D3A2D;
         }
-        
+
         .btn-secondary {
             background: #f0f0f0;
             color: #333;
         }
-        
-        /* Preview table */
+
         .preview-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 16px;
+            font-size: 0.9rem;
         }
-        
-        .preview-table th, .preview-table td {
-            padding: 12px;
+
+        .preview-table th,
+        .preview-table td {
+            padding: 10px;
             text-align: left;
             border-bottom: 1px solid #eee;
         }
-        
+
         .preview-table th {
             background: #f8f8f8;
             font-weight: 600;
         }
-        
+
         .preview-table tr:hover {
             background: #FFF8F0;
         }
-        
+
         .correct {
             color: #4CAF50;
             font-weight: 600;
         }
-        
-        /* Status messages */
+
         .status {
-            padding: 12px 16px;
+            padding: 10px 14px;
             border-radius: 8px;
-            margin-top: 16px;
+            margin-top: 12px;
         }
-        
+
         .status.success {
             background: #E8F5E9;
             color: #2E7D32;
         }
-        
+
         .status.error {
             background: #FFEBEE;
             color: #C62828;
         }
-        
+
         .status.info {
             background: #E3F2FD;
             color: #1565C0;
         }
-        
-        /* CSV Format help */
+
         .format-help {
             background: #f8f8f8;
-            padding: 16px;
+            padding: 14px;
             border-radius: 8px;
-            margin-top: 20px;
-            font-size: 0.9rem;
+            margin-top: 16px;
+            font-size: 0.85rem;
         }
-        
+
         .format-help code {
             background: #e8e8e8;
-            padding: 2px 6px;
+            padding: 2px 5px;
             border-radius: 4px;
             font-family: monospace;
         }
-        
-        /* Stats */
+
         .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 16px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
         }
-        
+
         .stat-card {
             background: linear-gradient(135deg, #8B4D3B 0%, #A65D45 100%);
             color: white;
-            padding: 20px;
+            padding: 16px;
             border-radius: 12px;
             text-align: center;
         }
-        
+
         .stat-number {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 700;
         }
-        
+
         .stat-label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             opacity: 0.9;
         }
-        
+
         .hidden {
             display: none;
         }
+
+        .debug-log {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 12px;
+        }
+
+        .debug-log .error {
+            color: #f44336;
+        }
+
+        .debug-log .success {
+            color: #4CAF50;
+        }
+
+        .debug-log .info {
+            color: #2196F3;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
             <h1>🏰 Český Kvíz Admin</h1>
             <p class="subtitle">Správa otázek a kategorií</p>
         </header>
-        
-        <!-- Stats -->
+
         <div class="stats" id="stats">
             <div class="stat-card">
                 <div class="stat-number" id="questionCount">-</div>
@@ -285,63 +307,57 @@
                 <div class="stat-number" id="categoryCount">-</div>
                 <div class="stat-label">Kategorií</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number" id="userCount">-</div>
-                <div class="stat-label">Uživatelů</div>
-            </div>
         </div>
-        
-        <!-- Tabs -->
+
         <div class="tabs">
             <button class="tab active" onclick="showTab('upload')">📤 Nahrát CSV</button>
             <button class="tab" onclick="showTab('single')">➕ Přidat otázku</button>
             <button class="tab" onclick="showTab('categories')">📁 Kategorie</button>
         </div>
-        
+
         <!-- CSV Upload Tab -->
         <div id="upload-tab" class="card">
             <h2>Hromadné nahrání otázek z CSV</h2>
-            
+
             <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
-                <p style="font-size: 3rem; margin-bottom: 10px;">📄</p>
+                <p style="font-size: 2.5rem; margin-bottom: 8px;">📄</p>
                 <p><strong>Klikni nebo přetáhni CSV soubor</strong></p>
-                <p style="color: #888; margin-top: 5px;">Podporovaný formát: CSV s oddělovačem středník (;)</p>
+                <p style="color: #888; margin-top: 4px; font-size: 0.9rem;">Formát: CSV s oddělovačem středník (;)</p>
             </div>
             <input type="file" id="fileInput" accept=".csv" onchange="handleFile(this.files[0])">
-            
+
             <div class="format-help">
                 <strong>Formát CSV:</strong><br>
                 <code>kategorie;otazka;odpoved_a;odpoved_b;odpoved_c;odpoved_d;spravna;zajimavost</code><br><br>
-                <strong>Příklad:</strong><br>
-                <code>Historie;Kdy byla založena Praha?;1230;1348;1000;1415;B;Prahu založil Karel IV.</code>
+                <strong>Kategorie:</strong> Historie, Zeměpis, Osobnosti, Kultura, Sport, Rychlý kvíz
             </div>
-            
+
             <div id="previewSection" class="hidden">
-                <h3 style="margin: 20px 0 10px;">Náhled ({count} otázek)</h3>
+                <h3 style="margin: 16px 0 8px;" id="previewTitle">Náhled</h3>
                 <table class="preview-table">
                     <thead>
                         <tr>
                             <th>Kategorie</th>
                             <th>Otázka</th>
-                            <th>Odpovědi</th>
                             <th>Správná</th>
                         </tr>
                     </thead>
                     <tbody id="previewBody"></tbody>
                 </table>
-                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                <div style="margin-top: 16px; display: flex; gap: 10px;">
                     <button class="btn btn-primary" onclick="uploadToSupabase()">✅ Nahrát do databáze</button>
                     <button class="btn btn-secondary" onclick="clearPreview()">❌ Zrušit</button>
                 </div>
             </div>
-            
+
             <div id="uploadStatus"></div>
+            <div id="debugLog" class="debug-log hidden"></div>
         </div>
-        
+
         <!-- Single Question Tab -->
         <div id="single-tab" class="card hidden">
             <h2>Přidat jednu otázku</h2>
-            
+
             <form id="questionForm" onsubmit="submitQuestion(event)">
                 <div class="form-group">
                     <label>Kategorie</label>
@@ -349,12 +365,12 @@
                         <option value="">Vyber kategorii...</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
                     <label>Otázka</label>
-                    <textarea id="questionText" rows="3" placeholder="Zadej text otázky..." required></textarea>
+                    <textarea id="questionText" rows="2" placeholder="Zadej text otázky..." required></textarea>
                 </div>
-                
+
                 <div class="form-group">
                     <label>Odpovědi (označ správnou)</label>
                     <div class="answers-grid">
@@ -376,93 +392,90 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label>Zajímavost (volitelné)</label>
                     <input type="text" id="funFact" placeholder="Zajímavý fakt k otázce...">
                 </div>
-                
+
                 <button type="submit" class="btn btn-primary">➕ Přidat otázku</button>
             </form>
-            
+
             <div id="singleStatus"></div>
         </div>
-        
+
         <!-- Categories Tab -->
         <div id="categories-tab" class="card hidden">
-            <h2>Správa kategorií</h2>
+            <h2>Kategorie v databázi</h2>
+            <p style="color: #666; margin-bottom: 12px; font-size: 0.9rem;">Tyto kategorie jsou dostupné pro otázky:</p>
             <div id="categoriesList"></div>
         </div>
     </div>
-    
+
     <script>
-        // Supabase config
         const SUPABASE_URL = 'https://kiufddssgmivpbteosjk.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpdWZkZHNzZ21pdnBidGVvc2prIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTQxNjYsImV4cCI6MjA4MzI5MDE2Nn0.KMjjqz4FKgCSaqMrvJUWMgOCKnYDZIoKBIO_0cviZ5c';
-        
+
         let parsedQuestions = [];
         let categories = [];
-        
-        // Initialize
+
         document.addEventListener('DOMContentLoaded', () => {
             loadStats();
             loadCategories();
             setupDragDrop();
         });
-        
-        // Tab switching
+
         function showTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('[id$="-tab"]').forEach(t => t.classList.add('hidden'));
-            
             event.target.classList.add('active');
             document.getElementById(tab + '-tab').classList.remove('hidden');
         }
-        
-        // Load stats from Supabase
+
         async function loadStats() {
             try {
-                const [questions, cats, users] = await Promise.all([
+                const [questions, cats] = await Promise.all([
                     supabaseGet('questions?select=id'),
-                    supabaseGet('categories?select=id'),
-                    supabaseGet('users?select=id')
+                    supabaseGet('categories?select=id')
                 ]);
-                
-                document.getElementById('questionCount').textContent = questions.length;
-                document.getElementById('categoryCount').textContent = cats.length;
-                document.getElementById('userCount').textContent = users.length;
+                document.getElementById('questionCount').textContent = questions.length || 0;
+                document.getElementById('categoryCount').textContent = cats.length || 0;
             } catch (e) {
-                console.error('Failed to load stats:', e);
+                log('Chyba při načítání statistik: ' + e.message, 'error');
             }
         }
-        
-        // Load categories
+
         async function loadCategories() {
             try {
                 categories = await supabaseGet('categories?select=*&order=sort_order');
-                
+                log('Načteno ' + categories.length + ' kategorií', 'info');
+
                 const select = document.getElementById('categorySelect');
+                select.innerHTML = '<option value="">Vyber kategorii...</option>';
                 categories.forEach(cat => {
                     const option = document.createElement('option');
                     option.value = cat.id;
                     option.textContent = cat.name;
                     select.appendChild(option);
                 });
-                
-                // Categories list
+
                 const list = document.getElementById('categoriesList');
-                list.innerHTML = categories.map(cat => `
-                    <div style="padding: 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
-                        <span><strong>${cat.name}</strong> - ${cat.description || 'Bez popisu'}</span>
-                        <span style="color: #888;">ID: ${cat.id.slice(0,8)}...</span>
-                    </div>
-                `).join('');
+                if (categories.length === 0) {
+                    list.innerHTML = '<p style="color: #C62828;">⚠️ Žádné kategorie! Spusť SQL script v Supabase.</p>';
+                } else {
+                    list.innerHTML = categories.map(cat => `
+                        <div style="padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+                            <span><strong>${cat.name}</strong></span>
+                            <span style="color: #888; font-size: 0.8rem;">${cat.id.slice(0, 8)}...</span>
+                        </div>
+                    `).join('');
+                }
             } catch (e) {
-                console.error('Failed to load categories:', e);
+                log('Chyba při načítání kategorií: ' + e.message, 'error');
+                document.getElementById('categoriesList').innerHTML = '<p style="color: #C62828;">⚠️ Nelze načíst kategorie. Zkontroluj Supabase.</p>';
             }
         }
-        
-        // Supabase helper
+
         async function supabaseGet(endpoint) {
             const res = await fetch(`${SUPABASE_URL}/rest/v1/${endpoint}`, {
                 headers: {
@@ -470,9 +483,13 @@
                     'Authorization': `Bearer ${SUPABASE_KEY}`
                 }
             });
+            if (!res.ok) {
+                const text = await res.text();
+                throw new Error(`HTTP ${res.status}: ${text}`);
+            }
             return res.json();
         }
-        
+
         async function supabasePost(endpoint, data) {
             const res = await fetch(`${SUPABASE_URL}/rest/v1/${endpoint}`, {
                 method: 'POST',
@@ -484,61 +501,56 @@
                 },
                 body: JSON.stringify(data)
             });
+            if (!res.ok) {
+                const text = await res.text();
+                throw new Error(`HTTP ${res.status}: ${text}`);
+            }
             return res.json();
         }
-        
-        // Drag & drop
+
         function setupDragDrop() {
             const area = document.getElementById('uploadArea');
-            
-            area.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                area.classList.add('dragover');
-            });
-            
-            area.addEventListener('dragleave', () => {
-                area.classList.remove('dragover');
-            });
-            
-            area.addEventListener('drop', (e) => {
-                e.preventDefault();
-                area.classList.remove('dragover');
-                handleFile(e.dataTransfer.files[0]);
-            });
+            area.addEventListener('dragover', (e) => { e.preventDefault(); area.classList.add('dragover'); });
+            area.addEventListener('dragleave', () => { area.classList.remove('dragover'); });
+            area.addEventListener('drop', (e) => { e.preventDefault(); area.classList.remove('dragover'); handleFile(e.dataTransfer.files[0]); });
         }
-        
-        // Handle CSV file
+
         function handleFile(file) {
             if (!file) return;
-            
+            clearLog();
+            log('Načítám soubor: ' + file.name, 'info');
             const reader = new FileReader();
-            reader.onload = (e) => {
-                parseCSV(e.target.result);
-            };
+            reader.onload = (e) => parseCSV(e.target.result);
             reader.readAsText(file, 'UTF-8');
         }
-        
-        // Parse CSV
+
+        function normalizeCategory(name) {
+            return name.toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z]/g, '');
+        }
+
+        function findCategory(csvName) {
+            const normalized = normalizeCategory(csvName);
+            return categories.find(c => normalizeCategory(c.name) === normalized);
+        }
+
         function parseCSV(content) {
             const lines = content.trim().split('\n');
             parsedQuestions = [];
-            
-            // Skip header if present
+            let skipped = 0;
+
             const startIndex = lines[0].toLowerCase().includes('kategorie') ? 1 : 0;
-            
+
             for (let i = startIndex; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line) continue;
-                
-                // Split by semicolon
+
                 const parts = line.split(';').map(p => p.trim());
-                
+
                 if (parts.length >= 7) {
-                    const categoryName = parts[0];
-                    const category = categories.find(c => 
-                        c.name.toLowerCase() === categoryName.toLowerCase()
-                    );
-                    
+                    const category = findCategory(parts[0]);
+
                     if (category) {
                         parsedQuestions.push({
                             categoryId: category.id,
@@ -549,55 +561,56 @@
                             funFact: parts[7] || null
                         });
                     } else {
-                        console.warn(`Kategorie "${categoryName}" nenalezena`);
+                        log(`Řádek ${i + 1}: Kategorie "${parts[0]}" nenalezena`, 'error');
+                        skipped++;
                     }
+                } else {
+                    log(`Řádek ${i + 1}: Neplatný formát (${parts.length} sloupců)`, 'error');
+                    skipped++;
                 }
             }
-            
+
+            log(`Načteno ${parsedQuestions.length} otázek, přeskočeno ${skipped}`, parsedQuestions.length > 0 ? 'success' : 'error');
             showPreview();
         }
-        
-        // Show preview
+
         function showPreview() {
             if (parsedQuestions.length === 0) {
-                showStatus('uploadStatus', 'Žádné validní otázky nenalezeny', 'error');
+                showStatus('uploadStatus', 'Žádné validní otázky. Zkontroluj log níže.', 'error');
+                document.getElementById('debugLog').classList.remove('hidden');
                 return;
             }
-            
+
             const section = document.getElementById('previewSection');
             section.classList.remove('hidden');
-            section.querySelector('h3').textContent = `Náhled (${parsedQuestions.length} otázek)`;
-            
+            document.getElementById('previewTitle').textContent = `Náhled (${parsedQuestions.length} otázek)`;
+
             const tbody = document.getElementById('previewBody');
-            tbody.innerHTML = parsedQuestions.map(q => `
+            tbody.innerHTML = parsedQuestions.slice(0, 10).map(q => `
                 <tr>
                     <td>${q.categoryName}</td>
-                    <td>${q.questionText.slice(0, 50)}...</td>
-                    <td>${q.answers.map((a, i) => 
-                        i === q.correctIndex ? `<span class="correct">${a}</span>` : a
-                    ).join(', ')}</td>
-                    <td>${['A', 'B', 'C', 'D'][q.correctIndex]}</td>
+                    <td>${q.questionText.slice(0, 40)}...</td>
+                    <td class="correct">${['A', 'B', 'C', 'D'][q.correctIndex]}</td>
                 </tr>
-            `).join('');
+            `).join('') + (parsedQuestions.length > 10 ? '<tr><td colspan="3" style="text-align:center; color:#888;">... a dalších ' + (parsedQuestions.length - 10) + '</td></tr>' : '');
         }
-        
-        // Clear preview
+
         function clearPreview() {
             parsedQuestions = [];
             document.getElementById('previewSection').classList.add('hidden');
             document.getElementById('fileInput').value = '';
+            document.getElementById('uploadStatus').innerHTML = '';
         }
-        
-        // Upload to Supabase
+
         async function uploadToSupabase() {
             showStatus('uploadStatus', 'Nahrávám...', 'info');
-            
-            let success = 0;
-            let errors = 0;
-            
-            for (const q of parsedQuestions) {
+            clearLog();
+
+            let success = 0, errors = 0;
+
+            for (let i = 0; i < parsedQuestions.length; i++) {
+                const q = parsedQuestions[i];
                 try {
-                    // Insert question
                     const questionRes = await supabasePost('questions', {
                         category_id: q.categoryId,
                         question_text: q.questionText,
@@ -605,42 +618,44 @@
                         time_limit_seconds: 30,
                         fun_fact: q.funFact
                     });
-                    
+
                     if (questionRes && questionRes[0]) {
                         const questionId = questionRes[0].id;
-                        
-                        // Insert answers
-                        const answersData = q.answers.map((text, i) => ({
+
+                        const answersData = q.answers.map((text, idx) => ({
                             question_id: questionId,
                             answer_text: text,
-                            is_correct: i === q.correctIndex,
-                            sort_order: i
+                            is_correct: idx === q.correctIndex,
+                            sort_order: idx
                         }));
-                        
+
                         await supabasePost('answers', answersData);
                         success++;
+                        log(`✓ "${q.questionText.slice(0, 30)}..."`, 'success');
                     } else {
-                        errors++;
+                        throw new Error('Prázdná odpověď');
                     }
                 } catch (e) {
-                    console.error('Error uploading question:', e);
+                    log(`✗ "${q.questionText.slice(0, 30)}...": ${e.message}`, 'error');
                     errors++;
                 }
             }
-            
-            showStatus('uploadStatus', 
-                `✅ Nahráno ${success} otázek` + (errors > 0 ? `, ${errors} chyb` : ''), 
+
+            showStatus('uploadStatus',
+                `✅ Nahráno ${success} otázek` + (errors > 0 ? `, ${errors} chyb` : ''),
                 errors > 0 ? 'error' : 'success'
             );
-            
-            clearPreview();
-            loadStats();
+
+            if (success > 0) {
+                clearPreview();
+                loadStats();
+            }
+            document.getElementById('debugLog').classList.remove('hidden');
         }
-        
-        // Submit single question
+
         async function submitQuestion(e) {
             e.preventDefault();
-            
+
             const categoryId = document.getElementById('categorySelect').value;
             const questionText = document.getElementById('questionText').value;
             const answers = [
@@ -651,10 +666,10 @@
             ];
             const correctIndex = parseInt(document.querySelector('input[name="correct"]:checked').value);
             const funFact = document.getElementById('funFact').value || null;
-            
+
             try {
                 showStatus('singleStatus', 'Ukládám...', 'info');
-                
+
                 const questionRes = await supabasePost('questions', {
                     category_id: categoryId,
                     question_text: questionText,
@@ -662,7 +677,7 @@
                     time_limit_seconds: 30,
                     fun_fact: funFact
                 });
-                
+
                 if (questionRes && questionRes[0]) {
                     const answersData = answers.map((text, i) => ({
                         question_id: questionRes[0].id,
@@ -670,23 +685,32 @@
                         is_correct: i === correctIndex,
                         sort_order: i
                     }));
-                    
+
                     await supabasePost('answers', answersData);
-                    
                     showStatus('singleStatus', '✅ Otázka úspěšně přidána!', 'success');
                     document.getElementById('questionForm').reset();
                     loadStats();
                 }
             } catch (e) {
-                showStatus('singleStatus', '❌ Chyba při ukládání: ' + e.message, 'error');
+                showStatus('singleStatus', '❌ Chyba: ' + e.message, 'error');
             }
         }
-        
-        // Show status message
+
         function showStatus(elementId, message, type) {
-            const el = document.getElementById(elementId);
-            el.innerHTML = `<div class="status ${type}">${message}</div>`;
+            document.getElementById(elementId).innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        function log(message, type = 'info') {
+            const logEl = document.getElementById('debugLog');
+            logEl.classList.remove('hidden');
+            logEl.innerHTML += `<div class="${type}">${message}</div>`;
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('debugLog').innerHTML = '';
         }
     </script>
 </body>
+
 </html>
