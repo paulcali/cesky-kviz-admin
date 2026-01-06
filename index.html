@@ -1050,10 +1050,17 @@
             parsedQuestions = [];
             const startIndex = lines[0].toLowerCase().includes('kategorie') ? 1 : 0;
 
+            console.log('Available categories:', categories.map(c => c.name));
+            console.log('Parsing lines:', lines.length - startIndex);
+
+            let skipped = [];
+
             for (let i = startIndex; i < lines.length; i++) {
                 const parts = lines[i].split(';').map(p => p.trim());
                 if (parts.length >= 7) {
-                    const cat = categories.find(c => normalizeCategory(c.name) === normalizeCategory(parts[0]));
+                    const catName = parts[0];
+                    const cat = categories.find(c => normalizeCategory(c.name) === normalizeCategory(catName));
+
                     if (cat) {
                         parsedQuestions.push({
                             categoryId: cat.id, categoryName: cat.name,
@@ -1063,9 +1070,18 @@
                             difficulty: parseInt(parts[7]) || 1,
                             funFact: parts[8] || ''
                         });
+                    } else {
+                        skipped.push(catName);
                     }
                 }
             }
+
+            if (skipped.length > 0) {
+                console.log('Skipped categories not found:', [...new Set(skipped)]);
+                alert('Nenalezeny kategorie: ' + [...new Set(skipped)].join(', ') + '\n\nZkontroluj názvy kategorií v databázi.');
+            }
+
+            console.log('Parsed questions:', parsedQuestions.length);
             showPreview();
         }
 
