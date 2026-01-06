@@ -737,9 +737,10 @@
 
             <div class="format-help">
                 <strong>Formát CSV:</strong><br>
-                <code>kategorie;otazka;odpoved_a;odpoved_b;odpoved_c;odpoved_d;spravna;obtiznost</code><br><br>
+                <code>kategorie;otazka;odpoved_a;odpoved_b;odpoved_c;odpoved_d;spravna;obtiznost;vedeli_jste</code><br><br>
                 <strong>Obtížnost:</strong> 1 = Začátečník, 2 = Mírně pokročilý, 3 = Pokročilý, 4 = Expert<br>
-                <strong>Správná odpověď:</strong> A, B, C nebo D
+                <strong>Správná odpověď:</strong> A, B, C nebo D<br>
+                <strong>Věděli jste:</strong> Zajímavost k otázce (nepovinné, nech prázdné pokud nemáš)
             </div>
 
             <div id="previewSection" class="hidden">
@@ -797,6 +798,10 @@
                         <div class="answer-input"><input type="radio" name="correct" value="3"><input type="text"
                                 id="answer3" placeholder="Odpověď D" required></div>
                     </div>
+                </div>
+                <div class="form-group">
+                    <label>💡 Věděli jste, že... (nepovinné)</label>
+                    <textarea id="funFact" placeholder="Zajímavost k otázce..."></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">➕ Přidat otázku</button>
             </form>
@@ -1055,7 +1060,8 @@
                             questionText: parts[1],
                             answers: [parts[2], parts[3], parts[4], parts[5]],
                             correctIndex: ['A', 'B', 'C', 'D'].indexOf(parts[6].toUpperCase()),
-                            difficulty: parseInt(parts[7]) || 1
+                            difficulty: parseInt(parts[7]) || 1,
+                            funFact: parts[8] || ''
                         });
                     }
                 }
@@ -1093,7 +1099,8 @@
                         category_id: q.categoryId,
                         question_text: q.questionText,
                         difficulty: q.difficulty,
-                        time_limit_seconds: 30
+                        time_limit_seconds: 30,
+                        fun_fact: q.funFact || null
                     });
                     if (qRes?.[0]) {
                         await supabasePost('answers', q.answers.map((t, i) => ({
@@ -1117,7 +1124,8 @@
                 category_id: document.getElementById('categorySelect').value,
                 question_text: document.getElementById('questionText').value,
                 difficulty: parseInt(document.getElementById('difficultySelect').value),
-                time_limit_seconds: 30
+                time_limit_seconds: 30,
+                fun_fact: document.getElementById('funFact').value || null
             };
             const answers = [0, 1, 2, 3].map(i => document.getElementById('answer' + i).value);
             const correct = parseInt(document.querySelector('input[name="correct"]:checked').value);
