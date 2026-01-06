@@ -14,12 +14,13 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #FFF8F0 0%, #F5EDE4 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
+            color: #e0e0e0;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -31,7 +32,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, #8B4D3B 0%, #6D3A2D 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -39,497 +40,738 @@
         }
 
         .login-box {
-            background: white;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
             padding: 40px;
             border-radius: 20px;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             max-width: 400px;
             width: 90%;
         }
 
         .login-box h1 {
-            color: #8B4D3B;
+            color: #fff;
             margin-bottom: 8px;
+            font-size: 2rem;
         }
 
         .login-box p {
-            color: #666;
+            color: rgba(255, 255, 255, 0.6);
             margin-bottom: 24px;
         }
 
         .login-box input {
             width: 100%;
             padding: 14px;
-            border: 2px solid #ddd;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             font-size: 1.1rem;
             text-align: center;
             letter-spacing: 4px;
             margin-bottom: 16px;
+            color: #fff;
         }
 
         .login-box input:focus {
             outline: none;
-            border-color: #8B4D3B;
+            border-color: #00d9ff;
         }
 
         .login-error {
-            color: #C62828;
+            color: #ff6b6b;
             margin-bottom: 12px;
             display: none;
         }
 
+        /* Header */
         header {
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        h1 {
-            color: #8B4D3B;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo h1 {
+            color: #fff;
+            font-size: 1.5rem;
+        }
+
+        .logo span {
             font-size: 1.8rem;
-            margin-bottom: 6px;
         }
 
-        .subtitle {
-            color: #666;
-            font-size: 0.95rem;
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .last-sync {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
         }
 
         .logout-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
             padding: 8px 16px;
-            background: #f0f0f0;
-            border: none;
-            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
             cursor: pointer;
+            color: #fff;
             font-size: 0.85rem;
         }
 
         .logout-btn:hover {
-            background: #e0e0e0;
-        }
-
-        .card {
-            background: white;
-            border-radius: 14px;
-            padding: 18px;
-            margin-bottom: 14px;
-            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        .card h2 {
-            color: #333;
-            margin-bottom: 12px;
-            font-size: 1.1rem;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 14px;
-            flex-wrap: wrap;
-        }
-
-        .tab {
-            padding: 9px 18px;
-            border: none;
-            background: #f0f0f0;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-
-        .tab.active {
-            background: #8B4D3B;
-            color: white;
-        }
-
-        .tab:hover:not(.active) {
-            background: #e0e0e0;
+            background: rgba(255, 255, 255, 0.15);
         }
 
         /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-            margin-bottom: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #8B4D3B 0%, #A65D45 100%);
-            color: white;
-            padding: 16px;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 16px;
             text-align: center;
         }
 
-        .stat-card.category {
-            background: linear-gradient(135deg, #5C6BC0 0%, #7986CB 100%);
+        .stat-card.total {
+            border-color: #00d9ff;
+        }
+
+        .stat-card.easy {
+            border-color: #4ade80;
+        }
+
+        .stat-card.medium {
+            border-color: #fbbf24;
+        }
+
+        .stat-card.hard {
+            border-color: #f97316;
+        }
+
+        .stat-card.expert {
+            border-color: #ef4444;
+        }
+
+        .stat-card.categories {
+            border-color: #a78bfa;
         }
 
         .stat-number {
-            font-size: 1.6rem;
+            font-size: 2.5rem;
             font-weight: 700;
+            color: #fff;
         }
 
         .stat-label {
-            font-size: 0.75rem;
-            opacity: 0.9;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 4px;
         }
 
-        /* Category breakdown */
-        .category-list {
-            margin-top: 12px;
+        .stat-icon {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
         }
 
-        .category-item {
+        /* Category Breakdown */
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 12px;
-            border-bottom: 1px solid #eee;
+            margin-bottom: 16px;
         }
 
-        .category-item:last-child {
-            border-bottom: none;
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .category-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+        }
+
+        .category-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .category-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
         }
 
         .category-name {
             font-weight: 500;
         }
 
-        .category-count {
-            background: #8B4D3B;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.85rem;
+        .category-stats {
+            display: flex;
+            gap: 8px;
+            font-size: 0.8rem;
+        }
+
+        .diff-badge {
+            padding: 2px 8px;
+            border-radius: 4px;
             font-weight: 600;
         }
 
-        /* Questions list */
-        .question-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 12px;
-            border-bottom: 1px solid #eee;
-            gap: 10px;
+        .diff-1 {
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
         }
 
-        .question-text {
-            flex: 1;
+        .diff-2 {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+
+        .diff-3 {
+            background: rgba(249, 115, 22, 0.2);
+            color: #f97316;
+        }
+
+        .diff-4 {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: #00d9ff;
+            color: #1a1a2e;
+            border-color: #00d9ff;
+            font-weight: 600;
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        select {
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #00d9ff;
+        }
+
+        option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+
+        /* Questions Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
             font-size: 0.9rem;
         }
 
-        .question-category {
-            background: #e8e8e8;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            color: #666;
+        th {
+            text-align: left;
+            padding: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .question-text {
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .date-cell {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
         }
 
         .delete-btn {
-            background: #FFEBEE;
-            color: #C62828;
-            border: none;
             padding: 6px 12px;
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: none;
             border-radius: 6px;
             cursor: pointer;
             font-size: 0.8rem;
         }
 
         .delete-btn:hover {
-            background: #FFCDD2;
+            background: rgba(239, 68, 68, 0.3);
         }
 
         .delete-all-btn {
-            background: #C62828;
+            padding: 10px 20px;
+            background: #ef4444;
             color: white;
             border: none;
-            padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
             font-size: 0.9rem;
-            margin-top: 12px;
         }
 
         .delete-all-btn:hover {
-            background: #B71C1C;
+            background: #dc2626;
         }
 
-        /* Upload */
+        /* Upload Section */
         .upload-area {
-            border: 2px dashed #ccc;
-            border-radius: 10px;
-            padding: 24px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 40px;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .upload-area:hover {
-            border-color: #8B4D3B;
-            background: #FFF8F0;
+            border-color: #00d9ff;
+            background: rgba(0, 217, 255, 0.05);
         }
 
-        #fileInput {
-            display: none;
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
         }
 
         .form-group {
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
 
         label {
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             font-weight: 500;
-            color: #333;
+            color: rgba(255, 255, 255, 0.8);
             font-size: 0.9rem;
         }
 
-        input,
-        select,
+        input[type="text"],
         textarea {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 0.9rem;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            color: #fff;
         }
 
         input:focus,
-        select:focus,
         textarea:focus {
             outline: none;
-            border-color: #8B4D3B;
+            border-color: #00d9ff;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
         }
 
         .answers-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            gap: 10px;
         }
 
         .answer-input {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+        }
+
+        .answer-input input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #00d9ff;
         }
 
         .answer-input input[type="text"] {
             flex: 1;
         }
 
-        .answer-input input[type="radio"] {
-            width: 16px;
-            height: 16px;
-        }
-
         .btn {
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 8px;
-            font-size: 0.9rem;
+            border-radius: 10px;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .btn-primary {
-            background: #8B4D3B;
-            color: white;
+            background: #00d9ff;
+            color: #1a1a2e;
         }
 
         .btn-primary:hover {
-            background: #6D3A2D;
+            background: #00c4e6;
         }
 
         .btn-secondary {
-            background: #f0f0f0;
-            color: #333;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
         }
 
         .preview-table {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 12px;
-            font-size: 0.85rem;
+            margin-top: 16px;
         }
 
         .preview-table th,
         .preview-table td {
-            padding: 8px;
+            padding: 10px;
             text-align: left;
-            border-bottom: 1px solid #eee;
         }
 
         .preview-table th {
-            background: #f8f8f8;
-            font-weight: 600;
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .correct {
-            color: #4CAF50;
-            font-weight: 600;
+            color: #4ade80;
         }
 
         .status {
-            padding: 10px 12px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-size: 0.9rem;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-top: 12px;
         }
 
         .status.success {
-            background: #E8F5E9;
-            color: #2E7D32;
+            background: rgba(74, 222, 128, 0.15);
+            color: #4ade80;
         }
 
         .status.error {
-            background: #FFEBEE;
-            color: #C62828;
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
         }
 
         .status.info {
-            background: #E3F2FD;
-            color: #1565C0;
+            background: rgba(0, 217, 255, 0.15);
+            color: #00d9ff;
         }
 
         .format-help {
-            background: #f8f8f8;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 12px;
-            font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 16px;
+            border-radius: 10px;
+            margin-top: 16px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .format-help code {
-            background: #e8e8e8;
-            padding: 2px 4px;
-            border-radius: 3px;
-            font-family: monospace;
-        }
-
-        .debug-log {
-            background: #1e1e1e;
-            color: #d4d4d4;
-            padding: 10px;
-            border-radius: 8px;
-            font-family: monospace;
-            font-size: 0.75rem;
-            max-height: 150px;
-            overflow-y: auto;
-            margin-top: 10px;
-        }
-
-        .debug-log .error {
-            color: #f44336;
-        }
-
-        .debug-log .success {
-            color: #4CAF50;
-        }
-
-        .debug-log .info {
-            color: #2196F3;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
         }
 
         .hidden {
             display: none;
         }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .answers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 </head>
 
 <body>
-    <!-- Login Overlay -->
+    <!-- Login -->
     <div class="login-overlay" id="loginOverlay">
         <div class="login-box">
-            <h1>🏰 Český Kvíz</h1>
+            <span style="font-size:3rem;">🏰</span>
+            <h1>Český Kvíz</h1>
             <p>Admin Panel</p>
             <div class="login-error" id="loginError">Nesprávný kód!</div>
             <input type="password" id="accessCode" placeholder="Přístupový kód" maxlength="20"
                 onkeypress="if(event.key==='Enter')checkLogin()">
             <button class="btn btn-primary" style="width:100%" onclick="checkLogin()">Přihlásit</button>
-            <p style="margin-top:16px;font-size:0.8rem;color:#888;">Přístup pouze pro administrátory</p>
         </div>
     </div>
 
     <div class="container" id="mainContent" style="display:none;">
-        <button class="logout-btn" onclick="logout()">🚪 Odhlásit</button>
-
+        <!-- Header -->
         <header>
-            <h1>🏰 Český Kvíz Admin</h1>
-            <p class="subtitle">Správa otázek a kategorií</p>
+            <div class="logo">
+                <span>🏰</span>
+                <h1>Český Kvíz Admin</h1>
+            </div>
+            <div class="header-actions">
+                <span class="last-sync" id="lastSync">Poslední sync: --</span>
+                <button class="logout-btn" onclick="logout()">🚪 Odhlásit</button>
+            </div>
         </header>
 
-        <!-- Stats -->
-        <div class="stats-grid" id="statsGrid"></div>
+        <!-- Stats Grid -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card total">
+                <div class="stat-icon">📊</div>
+                <div class="stat-number" id="totalQuestions">0</div>
+                <div class="stat-label">Celkem otázek</div>
+            </div>
+            <div class="stat-card easy">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-number" id="easyCount">0</div>
+                <div class="stat-label">Začátečník</div>
+            </div>
+            <div class="stat-card medium">
+                <div class="stat-icon">⭐⭐</div>
+                <div class="stat-number" id="mediumCount">0</div>
+                <div class="stat-label">Mírně pokročilý</div>
+            </div>
+            <div class="stat-card hard">
+                <div class="stat-icon">⭐⭐⭐</div>
+                <div class="stat-number" id="hardCount">0</div>
+                <div class="stat-label">Pokročilý</div>
+            </div>
+            <div class="stat-card expert">
+                <div class="stat-icon">⭐⭐⭐⭐</div>
+                <div class="stat-number" id="expertCount">0</div>
+                <div class="stat-label">Expert</div>
+            </div>
+            <div class="stat-card categories">
+                <div class="stat-icon">📁</div>
+                <div class="stat-number" id="categoryCount">0</div>
+                <div class="stat-label">Kategorií</div>
+            </div>
+        </div>
 
         <!-- Category Breakdown -->
-        <div class="card">
-            <h2>📊 Přehled kategorií</h2>
-            <div class="category-list" id="categoryBreakdown"></div>
+        <div class="section">
+            <div class="section-header">
+                <span class="section-title">📊 Přehled podle kategorií</span>
+            </div>
+            <div class="card">
+                <div class="category-breakdown" id="categoryBreakdown"></div>
+            </div>
         </div>
 
         <!-- Tabs -->
         <div class="tabs">
-            <button class="tab active" onclick="showTab('upload')">📤 Nahrát CSV</button>
+            <button class="tab active" onclick="showTab('questions')">📋 Správa otázek</button>
+            <button class="tab" onclick="showTab('upload')">📤 Nahrát CSV</button>
             <button class="tab" onclick="showTab('single')">➕ Přidat otázku</button>
-            <button class="tab" onclick="showTab('questions')">📋 Správa otázek</button>
         </div>
 
-        <!-- CSV Upload Tab -->
-        <div id="upload-tab" class="card">
-            <h2>Hromadné nahrání otázek z CSV</h2>
+        <!-- Questions Tab -->
+        <div id="questions-tab" class="card">
+            <div class="filters">
+                <div class="filter-group">
+                    <span class="filter-label">Kategorie:</span>
+                    <select id="filterCategory" onchange="loadQuestions()">
+                        <option value="">Všechny</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Obtížnost:</span>
+                    <select id="filterDifficulty" onchange="loadQuestions()">
+                        <option value="">Všechny</option>
+                        <option value="1">⭐ Začátečník</option>
+                        <option value="2">⭐⭐ Mírně pokročilý</option>
+                        <option value="3">⭐⭐⭐ Pokročilý</option>
+                        <option value="4">⭐⭐⭐⭐ Expert</option>
+                    </select>
+                </div>
+                <button class="delete-all-btn" onclick="deleteAllQuestions()">🗑️ Smazat vybrané</button>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Otázka</th>
+                            <th>Kategorie</th>
+                            <th>Obtížnost</th>
+                            <th>Přidáno</th>
+                            <th>Akce</th>
+                        </tr>
+                    </thead>
+                    <tbody id="questionsTable"></tbody>
+                </table>
+            </div>
+            <div id="questionsCount" style="margin-top:12px;font-size:0.85rem;color:rgba(255,255,255,0.5);"></div>
+        </div>
+
+        <!-- Upload Tab -->
+        <div id="upload-tab" class="card hidden">
             <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
-                <p style="font-size: 2rem; margin-bottom: 6px;">📄</p>
+                <div class="upload-icon">📄</div>
                 <p><strong>Klikni nebo přetáhni CSV soubor</strong></p>
+                <p style="color:rgba(255,255,255,0.5);font-size:0.9rem;margin-top:8px;">Podporované formáty: .csv</p>
             </div>
-            <input type="file" id="fileInput" accept=".csv" onchange="handleFile(this.files[0])">
+            <input type="file" id="fileInput" accept=".csv" onchange="handleFile(this.files[0])" style="display:none;">
+
             <div class="format-help">
-                <strong>Formát:</strong> <code>kategorie;otazka;odpoved_a;odpoved_b;odpoved_c;odpoved_d;spravna</code>
+                <strong>Formát CSV:</strong><br>
+                <code>kategorie;otazka;odpoved_a;odpoved_b;odpoved_c;odpoved_d;spravna;obtiznost</code><br><br>
+                <strong>Obtížnost:</strong> 1 = Začátečník, 2 = Mírně pokročilý, 3 = Pokročilý, 4 = Expert<br>
+                <strong>Správná odpověď:</strong> A, B, C nebo D
             </div>
+
             <div id="previewSection" class="hidden">
-                <h3 style="margin: 12px 0 6px;" id="previewTitle">Náhled</h3>
+                <h3 style="margin:20px 0 12px;" id="previewTitle">Náhled</h3>
                 <table class="preview-table">
                     <thead>
                         <tr>
                             <th>Kategorie</th>
                             <th>Otázka</th>
+                            <th>Obtížnost</th>
                             <th>Správná</th>
                         </tr>
                     </thead>
                     <tbody id="previewBody"></tbody>
                 </table>
-                <div style="margin-top: 12px; display: flex; gap: 8px;">
-                    <button class="btn btn-primary" onclick="uploadToSupabase()">✅ Nahrát</button>
+                <div style="margin-top:16px;display:flex;gap:12px;">
+                    <button class="btn btn-primary" onclick="uploadToSupabase()">✅ Nahrát do databáze</button>
                     <button class="btn btn-secondary" onclick="clearPreview()">❌ Zrušit</button>
                 </div>
             </div>
             <div id="uploadStatus"></div>
-            <div id="debugLog" class="debug-log hidden"></div>
         </div>
 
         <!-- Single Question Tab -->
         <div id="single-tab" class="card hidden">
-            <h2>Přidat jednu otázku</h2>
             <form id="questionForm" onsubmit="submitQuestion(event)">
-                <div style="display:flex;gap:10px;">
-                    <div class="form-group" style="flex:2;">
+                <div class="form-row">
+                    <div class="form-group">
                         <label>Kategorie</label>
-                        <select id="categorySelect" required>
-                            <option value="">Vyber...</option>
-                        </select>
+                        <select id="categorySelect" required></select>
                     </div>
-                    <div class="form-group" style="flex:1;">
+                    <div class="form-group">
                         <label>Obtížnost</label>
                         <select id="difficultySelect" required>
                             <option value="1">⭐ Začátečník</option>
@@ -540,37 +782,25 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Otázka</label>
-                    <textarea id="questionText" rows="2" placeholder="Text otázky..." required></textarea>
+                    <label>Text otázky</label>
+                    <textarea id="questionText" placeholder="Napiš otázku..." required></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Odpovědi</label>
+                    <label>Odpovědi (označ správnou)</label>
                     <div class="answers-grid">
                         <div class="answer-input"><input type="radio" name="correct" value="0" required><input
-                                type="text" id="answer0" placeholder="A" required></div>
+                                type="text" id="answer0" placeholder="Odpověď A" required></div>
                         <div class="answer-input"><input type="radio" name="correct" value="1"><input type="text"
-                                id="answer1" placeholder="B" required></div>
+                                id="answer1" placeholder="Odpověď B" required></div>
                         <div class="answer-input"><input type="radio" name="correct" value="2"><input type="text"
-                                id="answer2" placeholder="C" required></div>
+                                id="answer2" placeholder="Odpověď C" required></div>
                         <div class="answer-input"><input type="radio" name="correct" value="3"><input type="text"
-                                id="answer3" placeholder="D" required></div>
+                                id="answer3" placeholder="Odpověď D" required></div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">➕ Přidat</button>
+                <button type="submit" class="btn btn-primary">➕ Přidat otázku</button>
             </form>
             <div id="singleStatus"></div>
-        </div>
-
-        <!-- Questions Management Tab -->
-        <div id="questions-tab" class="card hidden">
-            <h2>📋 Správa otázek</h2>
-            <div style="display:flex;gap:8px;margin-bottom:12px;">
-                <select id="filterCategory" onchange="loadQuestions()" style="flex:1;">
-                    <option value="">Všechny kategorie</option>
-                </select>
-                <button class="delete-all-btn" onclick="deleteAllQuestions()">🗑️ Smazat vše</button>
-            </div>
-            <div id="questionsList"></div>
         </div>
     </div>
 
@@ -579,14 +809,13 @@
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpdWZkZHNzZ21pdnBidGVvc2prIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTQxNjYsImV4cCI6MjA4MzI5MDE2Nn0.KMjjqz4FKgCSaqMrvJUWMgOCKnYDZIoKBIO_0cviZ5c';
         const ACCESS_CODE = 'kviz2026';
 
-        let parsedQuestions = [];
         let categories = [];
         let allQuestions = [];
+        let parsedQuestions = [];
 
         // Auth
         function checkLogin() {
-            const code = document.getElementById('accessCode').value;
-            if (code === ACCESS_CODE) {
+            if (document.getElementById('accessCode').value === ACCESS_CODE) {
                 localStorage.setItem('kviz_admin_auth', 'true');
                 showMain();
             } else {
@@ -605,17 +834,16 @@
             init();
         }
 
-        // Init
         document.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('kviz_admin_auth') === 'true') {
-                showMain();
-            }
+            if (localStorage.getItem('kviz_admin_auth') === 'true') showMain();
         });
 
         async function init() {
             await loadCategories();
             await loadStats();
+            await loadQuestions();
             setupDragDrop();
+            document.getElementById('lastSync').textContent = `Poslední sync: ${new Date().toLocaleTimeString('cs-CZ')}`;
         }
 
         function showTab(tab) {
@@ -623,7 +851,6 @@
             document.querySelectorAll('[id$="-tab"]').forEach(t => t.classList.add('hidden'));
             event.target.classList.add('active');
             document.getElementById(tab + '-tab').classList.remove('hidden');
-            if (tab === 'questions') loadQuestions();
         }
 
         // API
@@ -657,138 +884,153 @@
             return true;
         }
 
-        // Load data
+        // Load Data
         async function loadCategories() {
             try {
                 categories = await supabaseGet('categories?select=*&order=sort_order');
-
                 const select = document.getElementById('categorySelect');
                 const filter = document.getElementById('filterCategory');
-                select.innerHTML = '<option value="">Vyber...</option>';
-                filter.innerHTML = '<option value="">Všechny kategorie</option>';
-
+                select.innerHTML = '<option value="">Vyber kategorii...</option>';
+                filter.innerHTML = '<option value="">Všechny</option>';
                 categories.forEach(cat => {
                     select.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
                     filter.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
                 });
-            } catch (e) {
-                console.error('Error loading categories:', e);
-            }
+            } catch (e) { console.error('Categories error:', e); }
         }
 
         async function loadStats() {
             try {
-                const questions = await supabaseGet('questions?select=id,category_id');
+                const questions = await supabaseGet('questions?select=id,category_id,difficulty,created_at');
 
-                // Count per category
-                const counts = {};
-                categories.forEach(c => counts[c.id] = 0);
-                questions.forEach(q => { if (counts[q.category_id] !== undefined) counts[q.category_id]++; });
+                // Difficulty counts
+                const diffCounts = { 1: 0, 2: 0, 3: 0, 4: 0 };
+                const catCounts = {};
+                const catDiffCounts = {};
 
-                // Stats grid
-                document.getElementById('statsGrid').innerHTML = `
-                    <div class="stat-card">
-                        <div class="stat-number">${questions.length}</div>
-                        <div class="stat-label">Celkem otázek</div>
-                    </div>
-                    <div class="stat-card category">
-                        <div class="stat-number">${categories.length}</div>
-                        <div class="stat-label">Kategorií</div>
-                    </div>
-                `;
+                categories.forEach(c => {
+                    catCounts[c.id] = 0;
+                    catDiffCounts[c.id] = { 1: 0, 2: 0, 3: 0, 4: 0 };
+                });
+
+                questions.forEach(q => {
+                    diffCounts[q.difficulty || 1]++;
+                    if (catCounts[q.category_id] !== undefined) {
+                        catCounts[q.category_id]++;
+                        catDiffCounts[q.category_id][q.difficulty || 1]++;
+                    }
+                });
+
+                // Update stats
+                document.getElementById('totalQuestions').textContent = questions.length;
+                document.getElementById('easyCount').textContent = diffCounts[1];
+                document.getElementById('mediumCount').textContent = diffCounts[2];
+                document.getElementById('hardCount').textContent = diffCounts[3];
+                document.getElementById('expertCount').textContent = diffCounts[4];
+                document.getElementById('categoryCount').textContent = categories.length;
 
                 // Category breakdown
+                const colors = {
+                    'Rychlý kvíz': '#FF8A65',
+                    'Historie': '#A1887F',
+                    'Zeměpis': '#4DB6AC',
+                    'Osobnosti': '#BA68C8',
+                    'Kultura': '#64B5F6',
+                    'Sport': '#8D6E63'
+                };
+
                 document.getElementById('categoryBreakdown').innerHTML = categories.map(cat => `
-                    <div class="category-item">
-                        <span class="category-name">${cat.name}</span>
-                        <span class="category-count">${counts[cat.id] || 0} otázek</span>
+                    <div class="category-row">
+                        <div class="category-info">
+                            <div class="category-icon" style="background:${colors[cat.name] || '#666'}20;color:${colors[cat.name] || '#666'}">
+                                ${cat.name.charAt(0)}
+                            </div>
+                            <span class="category-name">${cat.name}</span>
+                        </div>
+                        <div class="category-stats">
+                            <span class="diff-badge diff-1">${catDiffCounts[cat.id]?.[1] || 0}</span>
+                            <span class="diff-badge diff-2">${catDiffCounts[cat.id]?.[2] || 0}</span>
+                            <span class="diff-badge diff-3">${catDiffCounts[cat.id]?.[3] || 0}</span>
+                            <span class="diff-badge diff-4">${catDiffCounts[cat.id]?.[4] || 0}</span>
+                            <span style="margin-left:8px;font-weight:600;">${catCounts[cat.id] || 0}</span>
+                        </div>
                     </div>
                 `).join('');
 
-            } catch (e) {
-                console.error('Error loading stats:', e);
-            }
+            } catch (e) { console.error('Stats error:', e); }
         }
 
         async function loadQuestions() {
-            const filter = document.getElementById('filterCategory').value;
-            let endpoint = 'questions?select=id,question_text,category_id&order=created_at.desc&limit=100';
-            if (filter) endpoint += `&category_id=eq.${filter}`;
+            const catFilter = document.getElementById('filterCategory').value;
+            const diffFilter = document.getElementById('filterDifficulty').value;
+
+            let endpoint = 'questions?select=id,question_text,category_id,difficulty,created_at&order=created_at.desc&limit=200';
+            if (catFilter) endpoint += `&category_id=eq.${catFilter}`;
+            if (diffFilter) endpoint += `&difficulty=eq.${diffFilter}`;
 
             try {
                 allQuestions = await supabaseGet(endpoint);
+                const diffLabels = { 1: '⭐', 2: '⭐⭐', 3: '⭐⭐⭐', 4: '⭐⭐⭐⭐' };
 
-                const list = document.getElementById('questionsList');
-                if (allQuestions.length === 0) {
-                    list.innerHTML = '<p style="color:#888;text-align:center;padding:20px;">Žádné otázky</p>';
-                    return;
-                }
-
-                list.innerHTML = allQuestions.map(q => {
+                document.getElementById('questionsTable').innerHTML = allQuestions.map(q => {
                     const cat = categories.find(c => c.id === q.category_id);
+                    const date = q.created_at ? new Date(q.created_at).toLocaleDateString('cs-CZ') : '-';
                     return `
-                        <div class="question-item">
-                            <span class="question-text">${q.question_text.slice(0, 60)}${q.question_text.length > 60 ? '...' : ''}</span>
-                            <span class="question-category">${cat ? cat.name : '?'}</span>
-                            <button class="delete-btn" onclick="deleteQuestion('${q.id}')">🗑️</button>
-                        </div>
+                        <tr>
+                            <td class="question-text" title="${q.question_text}">${q.question_text}</td>
+                            <td>${cat?.name || '?'}</td>
+                            <td><span class="diff-badge diff-${q.difficulty || 1}">${diffLabels[q.difficulty || 1]}</span></td>
+                            <td class="date-cell">${date}</td>
+                            <td><button class="delete-btn" onclick="deleteQuestion('${q.id}')">🗑️</button></td>
+                        </tr>
                     `;
-                }).join('');
-            } catch (e) {
-                console.error('Error loading questions:', e);
-            }
+                }).join('') || '<tr><td colspan="5" style="text-align:center;padding:40px;color:rgba(255,255,255,0.5);">Žádné otázky</td></tr>';
+
+                document.getElementById('questionsCount').textContent = `Zobrazeno ${allQuestions.length} otázek`;
+            } catch (e) { console.error('Questions error:', e); }
         }
 
         async function deleteQuestion(id) {
-            if (!confirm('Opravdu smazat tuto otázku?')) return;
+            if (!confirm('Opravdu smazat?')) return;
             try {
                 await supabaseDelete(`answers?question_id=eq.${id}`);
                 await supabaseDelete(`questions?id=eq.${id}`);
                 loadQuestions();
                 loadStats();
-            } catch (e) {
-                alert('Chyba při mazání: ' + e.message);
-            }
+            } catch (e) { alert('Chyba: ' + e.message); }
         }
 
         async function deleteAllQuestions() {
-            const filter = document.getElementById('filterCategory').value;
-            const msg = filter
-                ? `Opravdu smazat všechny otázky v této kategorii?`
-                : 'Opravdu smazat VŠECHNY otázky? Toto nelze vrátit!';
+            const cat = document.getElementById('filterCategory').value;
+            const diff = document.getElementById('filterDifficulty').value;
 
-            if (!confirm(msg)) return;
-            if (!filter && !confirm('OPRAVDU smazat všechno?')) return;
+            if (!cat && !diff) {
+                if (!confirm('Opravdu smazat VŠECHNY otázky?')) return;
+                if (!confirm('OPRAVDU smazat všechno?')) return;
+            } else {
+                if (!confirm('Smazat vybrané otázky?')) return;
+            }
 
             try {
-                if (filter) {
-                    const qs = await supabaseGet(`questions?category_id=eq.${filter}&select=id`);
-                    for (const q of qs) {
-                        await supabaseDelete(`answers?question_id=eq.${q.id}`);
-                        await supabaseDelete(`questions?id=eq.${q.id}`);
-                    }
-                } else {
-                    await supabaseDelete('answers?id=neq.00000000-0000-0000-0000-000000000000');
-                    await supabaseDelete('questions?id=neq.00000000-0000-0000-0000-000000000000');
+                for (const q of allQuestions) {
+                    await supabaseDelete(`answers?question_id=eq.${q.id}`);
+                    await supabaseDelete(`questions?id=eq.${q.id}`);
                 }
                 loadQuestions();
                 loadStats();
-            } catch (e) {
-                alert('Chyba: ' + e.message);
-            }
+            } catch (e) { alert('Chyba: ' + e.message); }
         }
 
         // Upload
         function setupDragDrop() {
             const area = document.getElementById('uploadArea');
-            area.addEventListener('dragover', e => { e.preventDefault(); area.style.borderColor = '#8B4D3B'; });
-            area.addEventListener('dragleave', () => { area.style.borderColor = '#ccc'; });
-            area.addEventListener('drop', e => { e.preventDefault(); area.style.borderColor = '#ccc'; handleFile(e.dataTransfer.files[0]); });
+            area.addEventListener('dragover', e => { e.preventDefault(); area.style.borderColor = '#00d9ff'; });
+            area.addEventListener('dragleave', () => { area.style.borderColor = 'rgba(255,255,255,0.2)'; });
+            area.addEventListener('drop', e => { e.preventDefault(); area.style.borderColor = 'rgba(255,255,255,0.2)'; handleFile(e.dataTransfer.files[0]); });
         }
 
         function handleFile(file) {
             if (!file) return;
-            clearLog();
             const reader = new FileReader();
             reader.onload = e => parseCSV(e.target.result);
             reader.readAsText(file, 'UTF-8');
@@ -804,10 +1046,7 @@
             const startIndex = lines[0].toLowerCase().includes('kategorie') ? 1 : 0;
 
             for (let i = startIndex; i < lines.length; i++) {
-                const line = lines[i].trim();
-                if (!line) continue;
-                const parts = line.split(';').map(p => p.trim());
-
+                const parts = lines[i].split(';').map(p => p.trim());
                 if (parts.length >= 7) {
                     const cat = categories.find(c => normalizeCategory(c.name) === normalizeCategory(parts[0]));
                     if (cat) {
@@ -815,7 +1054,8 @@
                             categoryId: cat.id, categoryName: cat.name,
                             questionText: parts[1],
                             answers: [parts[2], parts[3], parts[4], parts[5]],
-                            correctIndex: ['A', 'B', 'C', 'D'].indexOf(parts[6].toUpperCase())
+                            correctIndex: ['A', 'B', 'C', 'D'].indexOf(parts[6].toUpperCase()),
+                            difficulty: parseInt(parts[7]) || 1
                         });
                     }
                 }
@@ -829,9 +1069,10 @@
                 return;
             }
             document.getElementById('previewSection').classList.remove('hidden');
-            document.getElementById('previewTitle').textContent = `Náhled (${parsedQuestions.length})`;
-            document.getElementById('previewBody').innerHTML = parsedQuestions.slice(0, 8).map(q =>
-                `<tr><td>${q.categoryName}</td><td>${q.questionText.slice(0, 35)}...</td><td class="correct">${['A', 'B', 'C', 'D'][q.correctIndex]}</td></tr>`
+            document.getElementById('previewTitle').textContent = `Náhled (${parsedQuestions.length} otázek)`;
+            const diffLabels = { 1: '⭐', 2: '⭐⭐', 3: '⭐⭐⭐', 4: '⭐⭐⭐⭐' };
+            document.getElementById('previewBody').innerHTML = parsedQuestions.slice(0, 10).map(q =>
+                `<tr><td>${q.categoryName}</td><td>${q.questionText.slice(0, 40)}...</td><td>${diffLabels[q.difficulty]}</td><td class="correct">${['A', 'B', 'C', 'D'][q.correctIndex]}</td></tr>`
             ).join('');
         }
 
@@ -851,10 +1092,10 @@
                     const qRes = await supabasePost('questions', {
                         category_id: q.categoryId,
                         question_text: q.questionText,
-                        difficulty: q.difficulty || 1,
+                        difficulty: q.difficulty,
                         time_limit_seconds: 30
                     });
-                    if (qRes && qRes[0]) {
+                    if (qRes?.[0]) {
                         await supabasePost('answers', q.answers.map((t, i) => ({
                             question_id: qRes[0].id,
                             answer_text: t,
@@ -863,11 +1104,11 @@
                         })));
                         success++;
                     }
-                } catch (e) { log(e.message, 'error'); }
+                } catch (e) { console.error(e); }
             }
 
-            showStatus('uploadStatus', `✅ Nahráno ${success}/${parsedQuestions.length}`, success === parsedQuestions.length ? 'success' : 'error');
-            if (success > 0) { clearPreview(); loadStats(); }
+            showStatus('uploadStatus', `✅ Nahráno ${success}/${parsedQuestions.length} otázek`, success === parsedQuestions.length ? 'success' : 'error');
+            if (success > 0) { clearPreview(); loadStats(); loadQuestions(); }
         }
 
         async function submitQuestion(e) {
@@ -875,7 +1116,7 @@
             const data = {
                 category_id: document.getElementById('categorySelect').value,
                 question_text: document.getElementById('questionText').value,
-                difficulty: parseInt(document.getElementById('difficultySelect').value) || 1,
+                difficulty: parseInt(document.getElementById('difficultySelect').value),
                 time_limit_seconds: 30
             };
             const answers = [0, 1, 2, 3].map(i => document.getElementById('answer' + i).value);
@@ -884,13 +1125,14 @@
             try {
                 showStatus('singleStatus', 'Ukládám...', 'info');
                 const qRes = await supabasePost('questions', data);
-                if (qRes && qRes[0]) {
+                if (qRes?.[0]) {
                     await supabasePost('answers', answers.map((t, i) => ({
                         question_id: qRes[0].id, answer_text: t, is_correct: i === correct, sort_order: i
                     })));
-                    showStatus('singleStatus', '✅ Přidáno!', 'success');
+                    showStatus('singleStatus', '✅ Otázka přidána!', 'success');
                     document.getElementById('questionForm').reset();
                     loadStats();
+                    loadQuestions();
                 }
             } catch (e) {
                 showStatus('singleStatus', '❌ ' + e.message, 'error');
@@ -900,12 +1142,6 @@
         function showStatus(id, msg, type) {
             document.getElementById(id).innerHTML = `<div class="status ${type}">${msg}</div>`;
         }
-        function log(msg, type = 'info') {
-            const el = document.getElementById('debugLog');
-            el.classList.remove('hidden');
-            el.innerHTML += `<div class="${type}">${msg}</div>`;
-        }
-        function clearLog() { document.getElementById('debugLog').innerHTML = ''; }
     </script>
 </body>
 
