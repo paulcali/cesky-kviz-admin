@@ -821,40 +821,64 @@
         // Users
         async function loadUsers() {
             const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Načítání...</td></tr>';
 
-            // Mock users for demonstration
-            const mockUsers = [
-                { display_name: 'KvízMistr42', email: 'test@example.com', level: 5, total_xp: 1250, wins: 12, losses: 3, is_online: true, is_banned: false, avatar_icon: '🎯', avatar_color: '#8B1538' },
-                { display_name: 'ChytrýHráč', email: 'hrac@example.com', level: 3, total_xp: 680, wins: 5, losses: 7, is_online: false, is_banned: false, avatar_icon: '🦁', avatar_color: '#FF9800' },
-            ];
+            try {
+                // Fetch real users from Supabase
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/users?select=*&order=created_at.desc`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
 
-            tbody.innerHTML = mockUsers.map(user => `
-                <tr>
-                    <td>
-                        <div class="user-cell">
-                            <div class="user-avatar" style="background: ${user.avatar_color}">${user.avatar_icon}</div>
-                            <div>
-                                <div class="user-name">${user.display_name}</div>
-                                <div class="user-email">${user.email || 'Bez emailu'}</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>Lv. ${user.level}</td>
-                    <td>${user.total_xp} XP</td>
-                    <td>${user.wins}/${user.losses}</td>
-                    <td>
-                        ${user.is_banned ? '<span class="badge banned">Zabanován</span>' :
-                    user.is_online ? '<span class="badge online">Online</span>' :
-                        '<span class="badge offline">Offline</span>'}
-                    </td>
-                    <td>
-                        ${user.is_banned ?
-                    `<button class="btn btn-success" onclick="unbanUser('${user.email}')">Odbanovat</button>` :
-                    `<button class="btn btn-danger" onclick="banUser('${user.email}')">Zabanovat</button>`
+                if (!response.ok) {
+                    throw new Error('Failed to fetch users');
                 }
-                    </td>
-                </tr>
-            `).join('');
+
+                const users = await response.json();
+                console.log('Loaded users:', users.length);
+
+                if (users.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Žádní uživatelé</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = users.map(user => `
+                    <tr>
+                        <td>
+                            <div class="user-cell">
+                                <div class="user-avatar" style="background: ${user.avatar_color || '#8B1538'}">${user.avatar_icon || '🎯'}</div>
+                                <div>
+                                    <div class="user-name">${user.display_name || 'Anonym'}</div>
+                                    <div class="user-email">${user.email || 'Bez emailu'}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Lv. ${user.level || 1}</td>
+                        <td>${user.total_xp || 0} XP</td>
+                        <td>${user.wins || 0}/${user.losses || 0}</td>
+                        <td>
+                            ${user.is_banned ? '<span class="badge banned">Zabanován</span>' :
+                        user.is_online ? '<span class="badge online">Online</span>' :
+                            '<span class="badge offline">Offline</span>'}
+                        </td>
+                        <td>
+                            ${user.is_banned ?
+                        `<button class="btn btn-success" onclick="unbanUser('${user.id}')">Odbanovat</button>` :
+                        `<button class="btn btn-danger" onclick="banUser('${user.id}')">Zabanovat</button>`
+                    }
+                        </td>
+                    </tr>
+                `).join('');
+
+                // Update total users count on dashboard
+                document.getElementById('totalUsers').textContent = users.length;
+
+            } catch (error) {
+                console.error('Error loading users:', error);
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#ff6b6b;">Chyba při načítání uživatelů</td></tr>';
+            }
         }
 
         function banUser(email) {
