@@ -532,7 +532,9 @@
             <h1>🏰 Admin Panel</h1>
             <p>Český Kvíz - Administrace</p>
             <div class="login-error" id="loginError">Špatný kód</div>
-            <input type="password" id="accessCode" placeholder="••••••" maxlength="6" autocomplete="off">
+            <input type="text" id="accessCode" placeholder="Zadej kód" maxlength="6" autocomplete="off">
+            <button class="btn btn-primary" style="width: 100%; margin-top: 12px; padding: 14px;"
+                onclick="tryLogin()">Přihlásit</button>
         </div>
     </div>
 
@@ -708,28 +710,40 @@
                 showMainContent();
             }
 
-            // Login handler
+            // Login handler - on input
             document.getElementById('accessCode').addEventListener('input', (e) => {
                 if (e.target.value.length === 6) {
-                    if (e.target.value === ADMIN_CODE) {
-                        sessionStorage.setItem('adminLoggedIn', 'true');
-                        showMainContent();
-                    } else {
-                        document.getElementById('loginError').style.display = 'block';
-                        e.target.value = '';
-                    }
+                    tryLogin();
                 }
             });
 
-            // Tab navigation
-            document.querySelectorAll('.nav-tab').forEach(tab => {
-                tab.addEventListener('click', () => {
-                    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-                    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            // Login handler - on Enter key
+            document.getElementById('accessCode').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    tryLogin();
+                }
+            });
+        });
 
-                    tab.classList.add('active');
-                    document.getElementById(tab.dataset.tab).classList.add('active');
-                });
+        function tryLogin() {
+            const code = document.getElementById('accessCode').value;
+            if (code === ADMIN_CODE) {
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                showMainContent();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                document.getElementById('accessCode').value = '';
+            }
+        }
+
+        // Tab navigation
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
             });
         });
 
