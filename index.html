@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Český Kvíz - Admin Panel</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
@@ -101,44 +103,67 @@
             gap: 12px;
         }
 
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #8B1538, #c41e3a);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
         .logo h1 {
-            color: #fff;
             font-size: 1.5rem;
+            color: #fff;
         }
 
         .logo span {
-            font-size: 1.8rem;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .last-sync {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: rgba(255, 255, 255, 0.5);
         }
 
-        .logout-btn {
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px;
+            border-radius: 12px;
+            width: fit-content;
+        }
+
+        .nav-tab {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+            font-weight: 500;
             cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-tab:hover {
             color: #fff;
-            font-size: 0.85rem;
+            background: rgba(255, 255, 255, 0.1);
         }
 
-        .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
+        .nav-tab.active {
+            background: linear-gradient(135deg, #8B1538, #c41e3a);
+            color: #fff;
         }
 
-        /* Stats Grid */
+        /* Stats Cards */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 16px;
             margin-bottom: 24px;
         }
@@ -146,1026 +171,742 @@
         .stat-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 20px;
             border-radius: 16px;
-            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .stat-card.total {
-            border-color: #00d9ff;
+        .stat-card .icon {
+            font-size: 32px;
+            margin-bottom: 12px;
         }
 
-        .stat-card.easy {
-            border-color: #4ade80;
-        }
-
-        .stat-card.medium {
-            border-color: #fbbf24;
-        }
-
-        .stat-card.hard {
-            border-color: #f97316;
-        }
-
-        .stat-card.expert {
-            border-color: #ef4444;
-        }
-
-        .stat-card.categories {
-            border-color: #a78bfa;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
+        .stat-card .value {
+            font-size: 2rem;
             font-weight: 700;
             color: #fff;
         }
 
-        .stat-label {
-            font-size: 0.85rem;
+        .stat-card .label {
+            font-size: 0.9rem;
             color: rgba(255, 255, 255, 0.6);
             margin-top: 4px;
         }
 
-        .stat-icon {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
+        .stat-card .change {
+            font-size: 0.85rem;
+            margin-top: 8px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: inline-block;
         }
 
-        /* Category Breakdown */
+        .stat-card .change.positive {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+        }
+
+        .stat-card .change.negative {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+
+        /* Sections */
         .section {
-            margin-bottom: 24px;
+            display: none;
+        }
+
+        .section.active {
+            display: block;
         }
 
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         .section-title {
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-size: 1.3rem;
             color: #fff;
         }
 
-        .card {
+        /* Charts */
+        .chart-container {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 24px;
             border-radius: 16px;
-            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .chart-title {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 16px;
+        }
+
+        /* Table */
+        .table-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             overflow: hidden;
         }
 
-        .category-breakdown {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 12px;
-        }
-
-        .category-row {
+        .table-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .category-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .category-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-        }
-
-        .category-name {
-            font-weight: 500;
-        }
-
-        .category-stats {
-            display: flex;
-            gap: 8px;
-            font-size: 0.8rem;
-        }
-
-        .diff-badge {
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-
-        .diff-1 {
-            background: rgba(74, 222, 128, 0.2);
-            color: #4ade80;
-        }
-
-        .diff-2 {
-            background: rgba(251, 191, 36, 0.2);
-            color: #fbbf24;
-        }
-
-        .diff-3 {
-            background: rgba(249, 115, 22, 0.2);
-            color: #f97316;
-        }
-
-        .diff-4 {
-            background: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .tab {
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
-            transition: all 0.2s;
-        }
-
-        .tab.active {
-            background: #00d9ff;
-            color: #1a1a2e;
-            border-color: #00d9ff;
-            font-weight: 600;
-        }
-
-        .tab:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Filters */
-        .filters {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .filter-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .filter-label {
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        select {
-            padding: 8px 12px;
+        .search-input {
+            padding: 10px 16px;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
             color: #fff;
             font-size: 0.9rem;
-            cursor: pointer;
+            width: 250px;
         }
 
-        select:focus {
+        .search-input:focus {
             outline: none;
             border-color: #00d9ff;
-        }
-
-        option {
-            background: #1a1a2e;
-            color: #fff;
-        }
-
-        /* Questions Table */
-        .table-container {
-            overflow-x: auto;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9rem;
         }
 
-        th {
-            text-align: left;
-            padding: 12px;
-            color: rgba(255, 255, 255, 0.5);
-            font-weight: 500;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
+        th,
         td {
-            padding: 12px;
+            padding: 14px 20px;
+            text-align: left;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        tr:hover td {
-            background: rgba(255, 255, 255, 0.02);
+        th {
+            background: rgba(255, 255, 255, 0.03);
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .question-text {
-            max-width: 300px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+        tr:hover {
+            background: rgba(255, 255, 255, 0.03);
         }
 
-        .date-cell {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.5);
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .delete-btn {
-            padding: 6px 12px;
-            background: rgba(239, 68, 68, 0.2);
-            color: #ef4444;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-
-        .delete-btn:hover {
-            background: rgba(239, 68, 68, 0.3);
-        }
-
-        .delete-all-btn {
-            padding: 10px 20px;
-            background: #ef4444;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-
-        .delete-all-btn:hover {
-            background: #dc2626;
-        }
-
-        /* Upload Section */
-        .upload-area {
-            border: 2px dashed rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            padding: 40px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .upload-area:hover {
-            border-color: #00d9ff;
-            background: rgba(0, 217, 255, 0.05);
-        }
-
-        .upload-icon {
-            font-size: 3rem;
-            margin-bottom: 12px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
-        }
-
-        input[type="text"],
-        textarea {
-            width: 100%;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .user-avatar {
+            width: 40px;
+            height: 40px;
             border-radius: 10px;
-            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .user-name {
+            font-weight: 500;
             color: #fff;
         }
 
-        input:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #00d9ff;
+        .user-email {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
         }
 
-        textarea {
-            resize: vertical;
-            min-height: 80px;
+        .badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
         }
 
-        .answers-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+        .badge.online {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
         }
 
-        .answer-input {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .badge.offline {
+            background: rgba(158, 158, 158, 0.2);
+            color: #9e9e9e;
         }
 
-        .answer-input input[type="radio"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #00d9ff;
+        .badge.banned {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
         }
 
-        .answer-input input[type="text"] {
-            flex: 1;
-        }
-
+        /* Buttons */
         .btn {
-            padding: 12px 24px;
+            padding: 8px 16px;
             border: none;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            font-weight: 600;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .btn-primary {
-            background: #00d9ff;
-            color: #1a1a2e;
-        }
-
-        .btn-primary:hover {
-            background: #00c4e6;
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
+            background: linear-gradient(135deg, #8B1538, #c41e3a);
             color: #fff;
         }
 
-        .preview-table {
-            width: 100%;
-            margin-top: 16px;
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 21, 56, 0.4);
         }
 
-        .preview-table th,
-        .preview-table td {
-            padding: 10px;
-            text-align: left;
+        .btn-danger {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
         }
 
-        .preview-table th {
+        .btn-danger:hover {
+            background: rgba(244, 67, 54, 0.3);
+        }
+
+        .btn-success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+        }
+
+        .btn-success:hover {
+            background: rgba(76, 175, 80, 0.3);
+        }
+
+        /* Config Section */
+        .config-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .config-item {
             background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .correct {
-            color: #4ade80;
+        .config-info h3 {
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 4px;
         }
 
-        .status {
-            padding: 12px 16px;
-            border-radius: 10px;
-            margin-top: 12px;
-        }
-
-        .status.success {
-            background: rgba(74, 222, 128, 0.15);
-            color: #4ade80;
-        }
-
-        .status.error {
-            background: rgba(239, 68, 68, 0.15);
-            color: #ef4444;
-        }
-
-        .status.info {
-            background: rgba(0, 217, 255, 0.15);
-            color: #00d9ff;
-        }
-
-        .format-help {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 16px;
-            border-radius: 10px;
-            margin-top: 16px;
+        .config-info p {
+            color: rgba(255, 255, 255, 0.5);
             font-size: 0.85rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .format-help code {
+        .config-value {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .config-input {
+            padding: 10px 14px;
             background: rgba(255, 255, 255, 0.1);
-            padding: 2px 6px;
-            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.9rem;
+            width: 200px;
         }
 
-        .hidden {
-            display: none;
+        .toggle {
+            width: 50px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .toggle.active {
+            background: #4CAF50;
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: #fff;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: left 0.2s;
+        }
+
+        .toggle.active::after {
+            left: 25px;
+        }
+
+        /* Online indicator */
+        .online-dot {
+            width: 10px;
+            height: 10px;
+            background: #4CAF50;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #8B1538;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .answers-grid {
-                grid-template-columns: 1fr;
-            }
-
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+
+            .nav-tabs {
+                flex-wrap: wrap;
             }
         }
     </style>
 </head>
 
 <body>
-    <!-- Login -->
+    <!-- Login Overlay -->
     <div class="login-overlay" id="loginOverlay">
         <div class="login-box">
-            <span style="font-size:3rem;">🏰</span>
-            <h1>Český Kvíz</h1>
-            <p>Admin Panel</p>
-            <div class="login-error" id="loginError">Nesprávný kód!</div>
-            <input type="password" id="accessCode" placeholder="Přístupový kód" maxlength="20"
-                onkeypress="if(event.key==='Enter')checkLogin()">
-            <button class="btn btn-primary" style="width:100%" onclick="checkLogin()">Přihlásit</button>
+            <h1>🏰 Admin Panel</h1>
+            <p>Český Kvíz - Administrace</p>
+            <div class="login-error" id="loginError">Špatný kód</div>
+            <input type="password" id="accessCode" placeholder="••••••" maxlength="6" autocomplete="off">
         </div>
     </div>
 
-    <div class="container" id="mainContent" style="display:none;">
+    <!-- Main Content -->
+    <div class="container" id="mainContent" style="display: none;">
         <!-- Header -->
         <header>
             <div class="logo">
-                <span>🏰</span>
-                <h1>Český Kvíz Admin</h1>
+                <div class="logo-icon">🏰</div>
+                <div>
+                    <h1>Admin Panel</h1>
+                    <span>Český Kvíz</span>
+                </div>
             </div>
-            <div class="header-actions">
-                <span class="last-sync" id="lastSync">Poslední sync: --</span>
-                <button class="logout-btn" onclick="logout()">🚪 Odhlásit</button>
-            </div>
+            <button class="btn btn-danger" onclick="logout()">Odhlásit</button>
         </header>
 
-        <!-- Stats Grid -->
-        <div class="stats-grid" id="statsGrid">
-            <div class="stat-card total">
-                <div class="stat-icon">📊</div>
-                <div class="stat-number" id="totalQuestions">0</div>
-                <div class="stat-label">Celkem otázek</div>
-            </div>
-            <div class="stat-card easy">
-                <div class="stat-icon">⭐</div>
-                <div class="stat-number" id="easyCount">0</div>
-                <div class="stat-label">Začátečník</div>
-            </div>
-            <div class="stat-card medium">
-                <div class="stat-icon">⭐⭐</div>
-                <div class="stat-number" id="mediumCount">0</div>
-                <div class="stat-label">Mírně pokročilý</div>
-            </div>
-            <div class="stat-card hard">
-                <div class="stat-icon">⭐⭐⭐</div>
-                <div class="stat-number" id="hardCount">0</div>
-                <div class="stat-label">Pokročilý</div>
-            </div>
-            <div class="stat-card expert">
-                <div class="stat-icon">⭐⭐⭐⭐</div>
-                <div class="stat-number" id="expertCount">0</div>
-                <div class="stat-label">Expert</div>
-            </div>
-            <div class="stat-card categories">
-                <div class="stat-icon">📁</div>
-                <div class="stat-number" id="categoryCount">0</div>
-                <div class="stat-label">Kategorií</div>
-            </div>
+        <!-- Navigation -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="dashboard">📊 Dashboard</button>
+            <button class="nav-tab" data-tab="users">👥 Uživatelé</button>
+            <button class="nav-tab" data-tab="config">⚙️ Nastavení</button>
+            <button class="nav-tab" data-tab="multiplayer">🎮 Multiplayer</button>
         </div>
 
-        <!-- Category Breakdown -->
-        <div class="section">
-            <div class="section-header">
-                <span class="section-title">📊 Přehled podle kategorií</span>
-            </div>
-            <div class="card">
-                <div class="category-breakdown" id="categoryBreakdown"></div>
-            </div>
-        </div>
-
-        <!-- Tabs -->
-        <div class="tabs">
-            <button class="tab active" onclick="showTab('questions')">📋 Správa otázek</button>
-            <button class="tab" onclick="showTab('upload')">📤 Nahrát CSV</button>
-            <button class="tab" onclick="showTab('single')">➕ Přidat otázku</button>
-        </div>
-
-        <!-- Questions Tab -->
-        <div id="questions-tab" class="card">
-            <div class="filters">
-                <div class="filter-group">
-                    <span class="filter-label">Kategorie:</span>
-                    <select id="filterCategory" onchange="loadQuestions()">
-                        <option value="">Všechny</option>
-                    </select>
+        <!-- Dashboard Section -->
+        <section class="section active" id="dashboard">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="icon">👥</div>
+                    <div class="value" id="onlineUsers">-</div>
+                    <div class="label"><span class="online-dot"></span>Online právě teď</div>
                 </div>
-                <div class="filter-group">
-                    <span class="filter-label">Obtížnost:</span>
-                    <select id="filterDifficulty" onchange="loadQuestions()">
-                        <option value="">Všechny</option>
-                        <option value="1">⭐ Začátečník</option>
-                        <option value="2">⭐⭐ Mírně pokročilý</option>
-                        <option value="3">⭐⭐⭐ Pokročilý</option>
-                        <option value="4">⭐⭐⭐⭐ Expert</option>
-                    </select>
+                <div class="stat-card">
+                    <div class="icon">📅</div>
+                    <div class="value" id="dauCount">-</div>
+                    <div class="label">Denní aktivní uživatelé</div>
+                    <div class="change positive" id="dauChange">+0%</div>
                 </div>
-                <button class="delete-all-btn" onclick="deleteAllQuestions()">🗑️ Smazat vybrané</button>
+                <div class="stat-card">
+                    <div class="icon">📊</div>
+                    <div class="value" id="wauCount">-</div>
+                    <div class="label">Týdenní aktivní uživatelé</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon">🎮</div>
+                    <div class="value" id="gamesPlayed">-</div>
+                    <div class="label">Her odehráno (dnes)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon">⚔️</div>
+                    <div class="value" id="multiplayerGames">-</div>
+                    <div class="label">Multiplayer zápasů</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon">👤</div>
+                    <div class="value" id="totalUsers">-</div>
+                    <div class="label">Celkem registrovaných</div>
+                </div>
             </div>
 
+            <!-- Charts -->
+            <div class="chart-container">
+                <div class="chart-title">Aktivita za posledních 7 dní</div>
+                <canvas id="activityChart" height="100"></canvas>
+            </div>
+        </section>
+
+        <!-- Users Section -->
+        <section class="section" id="users">
             <div class="table-container">
+                <div class="table-header">
+                    <h2 style="color: #fff;">Uživatelé</h2>
+                    <input type="text" class="search-input" placeholder="Hledat uživatele..." id="userSearch">
+                </div>
                 <table>
                     <thead>
                         <tr>
-                            <th>Otázka</th>
-                            <th>Kategorie</th>
-                            <th>Obtížnost</th>
-                            <th>Přidáno</th>
+                            <th>Uživatel</th>
+                            <th>Level</th>
+                            <th>XP</th>
+                            <th>Výhry/Prohry</th>
+                            <th>Status</th>
                             <th>Akce</th>
                         </tr>
                     </thead>
-                    <tbody id="questionsTable"></tbody>
+                    <tbody id="usersTableBody">
+                        <tr>
+                            <td colspan="6" class="loading">
+                                <div class="spinner"></div>
+                                Načítám uživatele...
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
-            <div id="questionsCount" style="margin-top:12px;font-size:0.85rem;color:rgba(255,255,255,0.5);"></div>
-        </div>
+        </section>
 
-        <!-- Upload Tab -->
-        <div id="upload-tab" class="card hidden">
-            <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
-                <div class="upload-icon">📄</div>
-                <p><strong>Klikni nebo přetáhni CSV soubor</strong></p>
-                <p style="color:rgba(255,255,255,0.5);font-size:0.9rem;margin-top:8px;">Podporované formáty: .csv</p>
+        <!-- Config Section -->
+        <section class="section" id="config">
+            <div class="section-header">
+                <h2 class="section-title">Remote Config</h2>
+                <button class="btn btn-primary" onclick="saveAllConfig()">💾 Uložit vše</button>
             </div>
-            <input type="file" id="fileInput" accept=".csv" onchange="handleFile(this.files[0])" style="display:none;">
+            <div class="config-grid" id="configGrid">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Načítám nastavení...
+                </div>
+            </div>
+        </section>
 
-            <div class="format-help">
-                <strong>Formát CSV:</strong><br>
-                <code>kategorie;otazka;odpoved_a;odpoved_b;odpoved_c;odpoved_d;spravna;obtiznost;vedeli_jste</code><br><br>
-                <strong>Obtížnost:</strong> 1 = Začátečník, 2 = Mírně pokročilý, 3 = Pokročilý, 4 = Expert<br>
-                <strong>Správná odpověď:</strong> A, B, C nebo D<br>
-                <strong>Věděli jste:</strong> Zajímavost k otázce (nepovinné, nech prázdné pokud nemáš)
+        <!-- Multiplayer Section -->
+        <section class="section" id="multiplayer">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="icon">⚔️</div>
+                    <div class="value" id="activeMatches">0</div>
+                    <div class="label">Aktivní zápasy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon">🔍</div>
+                    <div class="value" id="queueCount">0</div>
+                    <div class="label">Hledají soupeře</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon">📈</div>
+                    <div class="value" id="matchesToday">0</div>
+                    <div class="label">Zápasů dnes</div>
+                </div>
             </div>
 
-            <div id="previewSection" class="hidden">
-                <h3 style="margin:20px 0 12px;" id="previewTitle">Náhled</h3>
-                <table class="preview-table">
+            <div class="table-container">
+                <div class="table-header">
+                    <h2 style="color: #fff;">Aktivní zápasy</h2>
+                </div>
+                <table>
                     <thead>
                         <tr>
-                            <th>Kategorie</th>
-                            <th>Otázka</th>
-                            <th>Obtížnost</th>
-                            <th>Správná</th>
+                            <th>Hráč 1</th>
+                            <th>vs</th>
+                            <th>Hráč 2</th>
+                            <th>Skóre</th>
+                            <th>Trvání</th>
                         </tr>
                     </thead>
-                    <tbody id="previewBody"></tbody>
+                    <tbody id="matchesTableBody">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: rgba(255,255,255,0.5); padding: 40px;">
+                                Žádné aktivní zápasy
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
-                <div style="margin-top:16px;display:flex;gap:12px;">
-                    <button class="btn btn-primary" onclick="uploadToSupabase()">✅ Nahrát do databáze</button>
-                    <button class="btn btn-secondary" onclick="clearPreview()">❌ Zrušit</button>
-                </div>
             </div>
-            <div id="uploadStatus"></div>
-        </div>
-
-        <!-- Single Question Tab -->
-        <div id="single-tab" class="card hidden">
-            <form id="questionForm" onsubmit="submitQuestion(event)">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Kategorie</label>
-                        <select id="categorySelect" required></select>
-                    </div>
-                    <div class="form-group">
-                        <label>Obtížnost</label>
-                        <select id="difficultySelect" required>
-                            <option value="1">⭐ Začátečník</option>
-                            <option value="2">⭐⭐ Mírně pokročilý</option>
-                            <option value="3">⭐⭐⭐ Pokročilý</option>
-                            <option value="4">⭐⭐⭐⭐ Expert</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Text otázky</label>
-                    <textarea id="questionText" placeholder="Napiš otázku..." required></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Odpovědi (označ správnou)</label>
-                    <div class="answers-grid">
-                        <div class="answer-input"><input type="radio" name="correct" value="0" required><input
-                                type="text" id="answer0" placeholder="Odpověď A" required></div>
-                        <div class="answer-input"><input type="radio" name="correct" value="1"><input type="text"
-                                id="answer1" placeholder="Odpověď B" required></div>
-                        <div class="answer-input"><input type="radio" name="correct" value="2"><input type="text"
-                                id="answer2" placeholder="Odpověď C" required></div>
-                        <div class="answer-input"><input type="radio" name="correct" value="3"><input type="text"
-                                id="answer3" placeholder="Odpověď D" required></div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>💡 Věděli jste, že... (nepovinné)</label>
-                    <textarea id="funFact" placeholder="Zajímavost k otázce..."></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">➕ Přidat otázku</button>
-            </form>
-            <div id="singleStatus"></div>
-        </div>
+        </section>
     </div>
 
     <script>
-        const SUPABASE_URL = 'https://kiufddssgmivpbteosjk.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpdWZkZHNzZ21pdnBidGVvc2prIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTQxNjYsImV4cCI6MjA4MzI5MDE2Nn0.KMjjqz4FKgCSaqMrvJUWMgOCKnYDZIoKBIO_0cviZ5c';
-        const ACCESS_CODE = 'kviz2026';
+        // Config
+        const ADMIN_CODE = '123456'; // Change this!
+        const SUPABASE_URL = 'https://ynujpxlvmgumxnsg.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InludWpweGx2bWd1bXhuc2ciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc0NjM2MTc1NywiZXhwIjoyMDYxOTM3NzU3fQ.example';
 
-        let categories = [];
-        let allQuestions = [];
-        let parsedQuestions = [];
+        let supabase;
+        let activityChart;
 
-        // Auth
-        function checkLogin() {
-            if (document.getElementById('accessCode').value === ACCESS_CODE) {
-                localStorage.setItem('kviz_admin_auth', 'true');
-                showMain();
-            } else {
-                document.getElementById('loginError').style.display = 'block';
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if already logged in
+            if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+                showMainContent();
             }
+
+            // Login handler
+            document.getElementById('accessCode').addEventListener('input', (e) => {
+                if (e.target.value.length === 6) {
+                    if (e.target.value === ADMIN_CODE) {
+                        sessionStorage.setItem('adminLoggedIn', 'true');
+                        showMainContent();
+                    } else {
+                        document.getElementById('loginError').style.display = 'block';
+                        e.target.value = '';
+                    }
+                }
+            });
+
+            // Tab navigation
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+
+                    tab.classList.add('active');
+                    document.getElementById(tab.dataset.tab).classList.add('active');
+                });
+            });
+        });
+
+        function showMainContent() {
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            initSupabase();
+            loadDashboard();
         }
 
         function logout() {
-            localStorage.removeItem('kviz_admin_auth');
+            sessionStorage.removeItem('adminLoggedIn');
             location.reload();
         }
 
-        function showMain() {
-            document.getElementById('loginOverlay').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
-            init();
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('kviz_admin_auth') === 'true') showMain();
-        });
-
-        async function init() {
-            await loadCategories();
-            await loadStats();
-            await loadQuestions();
-            setupDragDrop();
-            document.getElementById('lastSync').textContent = `Poslední sync: ${new Date().toLocaleTimeString('cs-CZ')}`;
-        }
-
-        function showTab(tab) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('[id$="-tab"]').forEach(t => t.classList.add('hidden'));
-            event.target.classList.add('active');
-            document.getElementById(tab + '-tab').classList.remove('hidden');
-        }
-
-        // API
-        async function supabaseGet(endpoint) {
-            const res = await fetch(`${SUPABASE_URL}/rest/v1/${endpoint}`, {
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-            });
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            return res.json();
-        }
-
-        async function supabasePost(endpoint, data) {
-            const res = await fetch(`${SUPABASE_URL}/rest/v1/${endpoint}`, {
-                method: 'POST',
-                headers: {
-                    'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`,
-                    'Content-Type': 'application/json', 'Prefer': 'return=representation'
-                },
-                body: JSON.stringify(data)
-            });
-            if (!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
-            return res.json();
-        }
-
-        async function supabaseDelete(endpoint) {
-            const res = await fetch(`${SUPABASE_URL}/rest/v1/${endpoint}`, {
-                method: 'DELETE',
-                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-            });
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            return true;
-        }
-
-        // Load Data
-        async function loadCategories() {
+        function initSupabase() {
             try {
-                categories = await supabaseGet('categories?select=*&order=sort_order');
-                const select = document.getElementById('categorySelect');
-                const filter = document.getElementById('filterCategory');
-                select.innerHTML = '<option value="">Vyber kategorii...</option>';
-                filter.innerHTML = '<option value="">Všechny</option>';
-                categories.forEach(cat => {
-                    select.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
-                    filter.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
-                });
-            } catch (e) { console.error('Categories error:', e); }
-        }
-
-        async function loadStats() {
-            try {
-                const questions = await supabaseGet('questions?select=id,category_id,difficulty,created_at');
-
-                // Difficulty counts
-                const diffCounts = { 1: 0, 2: 0, 3: 0, 4: 0 };
-                const catCounts = {};
-                const catDiffCounts = {};
-
-                categories.forEach(c => {
-                    catCounts[c.id] = 0;
-                    catDiffCounts[c.id] = { 1: 0, 2: 0, 3: 0, 4: 0 };
-                });
-
-                questions.forEach(q => {
-                    diffCounts[q.difficulty || 1]++;
-                    if (catCounts[q.category_id] !== undefined) {
-                        catCounts[q.category_id]++;
-                        catDiffCounts[q.category_id][q.difficulty || 1]++;
-                    }
-                });
-
-                // Update stats
-                document.getElementById('totalQuestions').textContent = questions.length;
-                document.getElementById('easyCount').textContent = diffCounts[1];
-                document.getElementById('mediumCount').textContent = diffCounts[2];
-                document.getElementById('hardCount').textContent = diffCounts[3];
-                document.getElementById('expertCount').textContent = diffCounts[4];
-                document.getElementById('categoryCount').textContent = categories.length;
-
-                // Category breakdown
-                const colors = {
-                    'Rychlý kvíz': '#FF8A65',
-                    'Historie': '#A1887F',
-                    'Zeměpis': '#4DB6AC',
-                    'Osobnosti': '#BA68C8',
-                    'Kultura': '#64B5F6',
-                    'Sport': '#8D6E63'
-                };
-
-                document.getElementById('categoryBreakdown').innerHTML = categories.map(cat => `
-                    <div class="category-row">
-                        <div class="category-info">
-                            <div class="category-icon" style="background:${colors[cat.name] || '#666'}20;color:${colors[cat.name] || '#666'}">
-                                ${cat.name.charAt(0)}
-                            </div>
-                            <span class="category-name">${cat.name}</span>
-                        </div>
-                        <div class="category-stats">
-                            <span class="diff-badge diff-1">${catDiffCounts[cat.id]?.[1] || 0}</span>
-                            <span class="diff-badge diff-2">${catDiffCounts[cat.id]?.[2] || 0}</span>
-                            <span class="diff-badge diff-3">${catDiffCounts[cat.id]?.[3] || 0}</span>
-                            <span class="diff-badge diff-4">${catDiffCounts[cat.id]?.[4] || 0}</span>
-                            <span style="margin-left:8px;font-weight:600;">${catCounts[cat.id] || 0}</span>
-                        </div>
-                    </div>
-                `).join('');
-
-            } catch (e) { console.error('Stats error:', e); }
-        }
-
-        async function loadQuestions() {
-            const catFilter = document.getElementById('filterCategory').value;
-            const diffFilter = document.getElementById('filterDifficulty').value;
-
-            let endpoint = 'questions?select=id,question_text,category_id,difficulty,created_at&order=created_at.desc&limit=200';
-            if (catFilter) endpoint += `&category_id=eq.${catFilter}`;
-            if (diffFilter) endpoint += `&difficulty=eq.${diffFilter}`;
-
-            try {
-                allQuestions = await supabaseGet(endpoint);
-                const diffLabels = { 1: '⭐', 2: '⭐⭐', 3: '⭐⭐⭐', 4: '⭐⭐⭐⭐' };
-
-                document.getElementById('questionsTable').innerHTML = allQuestions.map(q => {
-                    const cat = categories.find(c => c.id === q.category_id);
-                    const date = q.created_at ? new Date(q.created_at).toLocaleDateString('cs-CZ') : '-';
-                    return `
-                        <tr>
-                            <td class="question-text" title="${q.question_text}">${q.question_text}</td>
-                            <td>${cat?.name || '?'}</td>
-                            <td><span class="diff-badge diff-${q.difficulty || 1}">${diffLabels[q.difficulty || 1]}</span></td>
-                            <td class="date-cell">${date}</td>
-                            <td><button class="delete-btn" onclick="deleteQuestion('${q.id}')">🗑️</button></td>
-                        </tr>
-                    `;
-                }).join('') || '<tr><td colspan="5" style="text-align:center;padding:40px;color:rgba(255,255,255,0.5);">Žádné otázky</td></tr>';
-
-                document.getElementById('questionsCount').textContent = `Zobrazeno ${allQuestions.length} otázek`;
-            } catch (e) { console.error('Questions error:', e); }
-        }
-
-        async function deleteQuestion(id) {
-            if (!confirm('Opravdu smazat?')) return;
-            try {
-                await supabaseDelete(`answers?question_id=eq.${id}`);
-                await supabaseDelete(`questions?id=eq.${id}`);
-                loadQuestions();
-                loadStats();
-            } catch (e) { alert('Chyba: ' + e.message); }
-        }
-
-        async function deleteAllQuestions() {
-            const cat = document.getElementById('filterCategory').value;
-            const diff = document.getElementById('filterDifficulty').value;
-
-            if (!cat && !diff) {
-                if (!confirm('Opravdu smazat VŠECHNY otázky?')) return;
-                if (!confirm('OPRAVDU smazat všechno?')) return;
-            } else {
-                if (!confirm('Smazat vybrané otázky?')) return;
-            }
-
-            try {
-                for (const q of allQuestions) {
-                    await supabaseDelete(`answers?question_id=eq.${q.id}`);
-                    await supabaseDelete(`questions?id=eq.${q.id}`);
-                }
-                loadQuestions();
-                loadStats();
-            } catch (e) { alert('Chyba: ' + e.message); }
-        }
-
-        // Upload
-        function setupDragDrop() {
-            const area = document.getElementById('uploadArea');
-            area.addEventListener('dragover', e => { e.preventDefault(); area.style.borderColor = '#00d9ff'; });
-            area.addEventListener('dragleave', () => { area.style.borderColor = 'rgba(255,255,255,0.2)'; });
-            area.addEventListener('drop', e => { e.preventDefault(); area.style.borderColor = 'rgba(255,255,255,0.2)'; handleFile(e.dataTransfer.files[0]); });
-        }
-
-        function handleFile(file) {
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = e => parseCSV(e.target.result);
-            reader.readAsText(file, 'UTF-8');
-        }
-
-        function normalizeCategory(name) {
-            return name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z]/g, '');
-        }
-
-        function parseCSV(content) {
-            const lines = content.trim().split('\n');
-            parsedQuestions = [];
-            const startIndex = lines[0].toLowerCase().includes('kategorie') ? 1 : 0;
-
-            console.log('Available categories:', categories.map(c => c.name));
-            console.log('Parsing lines:', lines.length - startIndex);
-
-            let skipped = [];
-
-            for (let i = startIndex; i < lines.length; i++) {
-                const parts = lines[i].split(';').map(p => p.trim());
-                if (parts.length >= 7) {
-                    const catName = parts[0];
-                    const cat = categories.find(c => normalizeCategory(c.name) === normalizeCategory(catName));
-
-                    if (cat) {
-                        parsedQuestions.push({
-                            categoryId: cat.id, categoryName: cat.name,
-                            questionText: parts[1],
-                            answers: [parts[2], parts[3], parts[4], parts[5]],
-                            correctIndex: ['A', 'B', 'C', 'D'].indexOf(parts[6].toUpperCase()),
-                            difficulty: parseInt(parts[7]) || 1,
-                            funFact: parts[8] || ''
-                        });
-                    } else {
-                        skipped.push(catName);
-                    }
-                }
-            }
-
-            if (skipped.length > 0) {
-                console.log('Skipped categories not found:', [...new Set(skipped)]);
-                alert('Nenalezeny kategorie: ' + [...new Set(skipped)].join(', ') + '\n\nZkontroluj názvy kategorií v databázi.');
-            }
-
-            console.log('Parsed questions:', parsedQuestions.length);
-            showPreview();
-        }
-
-        function showPreview() {
-            if (parsedQuestions.length === 0) {
-                showStatus('uploadStatus', 'Žádné validní otázky', 'error');
-                return;
-            }
-            document.getElementById('previewSection').classList.remove('hidden');
-            document.getElementById('previewTitle').textContent = `Náhled (${parsedQuestions.length} otázek)`;
-            const diffLabels = { 1: '⭐', 2: '⭐⭐', 3: '⭐⭐⭐', 4: '⭐⭐⭐⭐' };
-            document.getElementById('previewBody').innerHTML = parsedQuestions.slice(0, 10).map(q =>
-                `<tr><td>${q.categoryName}</td><td>${q.questionText.slice(0, 40)}...</td><td>${diffLabels[q.difficulty]}</td><td class="correct">${['A', 'B', 'C', 'D'][q.correctIndex]}</td></tr>`
-            ).join('');
-        }
-
-        function clearPreview() {
-            parsedQuestions = [];
-            document.getElementById('previewSection').classList.add('hidden');
-            document.getElementById('fileInput').value = '';
-            document.getElementById('uploadStatus').innerHTML = '';
-        }
-
-        async function uploadToSupabase() {
-            showStatus('uploadStatus', 'Nahrávám...', 'info');
-            let success = 0;
-
-            for (const q of parsedQuestions) {
-                try {
-                    const qRes = await supabasePost('questions', {
-                        category_id: q.categoryId,
-                        question_text: q.questionText,
-                        difficulty: q.difficulty,
-                        time_limit_seconds: 30,
-                        fun_fact: q.funFact || null
-                    });
-                    if (qRes?.[0]) {
-                        await supabasePost('answers', q.answers.map((t, i) => ({
-                            question_id: qRes[0].id,
-                            answer_text: t,
-                            is_correct: i === q.correctIndex,
-                            sort_order: i
-                        })));
-                        success++;
-                    }
-                } catch (e) { console.error(e); }
-            }
-
-            showStatus('uploadStatus', `✅ Nahráno ${success}/${parsedQuestions.length} otázek`, success === parsedQuestions.length ? 'success' : 'error');
-            if (success > 0) { clearPreview(); loadStats(); loadQuestions(); }
-        }
-
-        async function submitQuestion(e) {
-            e.preventDefault();
-            const data = {
-                category_id: document.getElementById('categorySelect').value,
-                question_text: document.getElementById('questionText').value,
-                difficulty: parseInt(document.getElementById('difficultySelect').value),
-                time_limit_seconds: 30,
-                fun_fact: document.getElementById('funFact').value || null
-            };
-            const answers = [0, 1, 2, 3].map(i => document.getElementById('answer' + i).value);
-            const correct = parseInt(document.querySelector('input[name="correct"]:checked').value);
-
-            try {
-                showStatus('singleStatus', 'Ukládám...', 'info');
-                const qRes = await supabasePost('questions', data);
-                if (qRes?.[0]) {
-                    await supabasePost('answers', answers.map((t, i) => ({
-                        question_id: qRes[0].id, answer_text: t, is_correct: i === correct, sort_order: i
-                    })));
-                    showStatus('singleStatus', '✅ Otázka přidána!', 'success');
-                    document.getElementById('questionForm').reset();
-                    loadStats();
-                    loadQuestions();
-                }
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             } catch (e) {
-                showStatus('singleStatus', '❌ ' + e.message, 'error');
+                console.log('Supabase not configured yet');
             }
         }
 
-        function showStatus(id, msg, type) {
-            document.getElementById(id).innerHTML = `<div class="status ${type}">${msg}</div>`;
+        // Dashboard
+        async function loadDashboard() {
+            // Mock data for now - will connect to Supabase
+            document.getElementById('onlineUsers').textContent = '0';
+            document.getElementById('dauCount').textContent = '0';
+            document.getElementById('wauCount').textContent = '0';
+            document.getElementById('gamesPlayed').textContent = '0';
+            document.getElementById('multiplayerGames').textContent = '0';
+            document.getElementById('totalUsers').textContent = '0';
+
+            // Initialize chart
+            const ctx = document.getElementById('activityChart').getContext('2d');
+            activityChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Pon', 'Úte', 'Stř', 'Čtv', 'Pát', 'Sob', 'Ned'],
+                    datasets: [{
+                        label: 'Aktivní uživatelé',
+                        data: [0, 0, 0, 0, 0, 0, 0],
+                        borderColor: '#8B1538',
+                        backgroundColor: 'rgba(139, 21, 56, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)'
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.5)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.5)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            loadUsers();
+            loadConfig();
         }
+
+        // Users
+        async function loadUsers() {
+            const tbody = document.getElementById('usersTableBody');
+
+            // Mock users for demonstration
+            const mockUsers = [
+                { display_name: 'KvízMistr42', email: 'test@example.com', level: 5, total_xp: 1250, wins: 12, losses: 3, is_online: true, is_banned: false, avatar_icon: '🎯', avatar_color: '#8B1538' },
+                { display_name: 'ChytrýHráč', email: 'hrac@example.com', level: 3, total_xp: 680, wins: 5, losses: 7, is_online: false, is_banned: false, avatar_icon: '🦁', avatar_color: '#FF9800' },
+            ];
+
+            tbody.innerHTML = mockUsers.map(user => `
+                <tr>
+                    <td>
+                        <div class="user-cell">
+                            <div class="user-avatar" style="background: ${user.avatar_color}">${user.avatar_icon}</div>
+                            <div>
+                                <div class="user-name">${user.display_name}</div>
+                                <div class="user-email">${user.email || 'Bez emailu'}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>Lv. ${user.level}</td>
+                    <td>${user.total_xp} XP</td>
+                    <td>${user.wins}/${user.losses}</td>
+                    <td>
+                        ${user.is_banned ? '<span class="badge banned">Zabanován</span>' :
+                    user.is_online ? '<span class="badge online">Online</span>' :
+                        '<span class="badge offline">Offline</span>'}
+                    </td>
+                    <td>
+                        ${user.is_banned ?
+                    `<button class="btn btn-success" onclick="unbanUser('${user.email}')">Odbanovat</button>` :
+                    `<button class="btn btn-danger" onclick="banUser('${user.email}')">Zabanovat</button>`
+                }
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function banUser(email) {
+            if (confirm(`Opravdu chcete zabanovat uživatele ${email}?`)) {
+                alert('Uživatel zabanován (demo)');
+                loadUsers();
+            }
+        }
+
+        function unbanUser(email) {
+            alert('Uživatel odbanován (demo)');
+            loadUsers();
+        }
+
+        // Config
+        async function loadConfig() {
+            const grid = document.getElementById('configGrid');
+
+            // Default config items
+            const configItems = [
+                { key: 'multiplayer_enabled', value: true, description: 'Povolit multiplayer', type: 'toggle' },
+                { key: 'maintenance_mode', value: false, description: 'Režim údržby', type: 'toggle' },
+                { key: 'min_app_version', value: '1.0.0', description: 'Minimální verze aplikace', type: 'text' },
+                { key: 'daily_challenge_xp', value: '50', description: 'XP za denní výzvu', type: 'number' },
+                { key: 'matchmaking_timeout', value: '30', description: 'Timeout matchmakingu (s)', type: 'number' },
+            ];
+
+            grid.innerHTML = configItems.map(item => `
+                <div class="config-item">
+                    <div class="config-info">
+                        <h3>${item.key}</h3>
+                        <p>${item.description}</p>
+                    </div>
+                    <div class="config-value">
+                        ${item.type === 'toggle' ?
+                    `<div class="toggle ${item.value ? 'active' : ''}" data-key="${item.key}" onclick="toggleConfig(this)"></div>` :
+                    `<input type="${item.type}" class="config-input" data-key="${item.key}" value="${item.value}">`
+                }
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleConfig(el) {
+            el.classList.toggle('active');
+        }
+
+        function saveAllConfig() {
+            alert('Nastavení uloženo (demo)');
+        }
+
+        // Search
+        document.getElementById('userSearch')?.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            document.querySelectorAll('#usersTableBody tr').forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        });
     </script>
 </body>
 
