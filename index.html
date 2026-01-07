@@ -696,37 +696,16 @@
 
     <script>
         // Config
-        const ADMIN_CODE = '123456'; // Change this!
+        const ADMIN_CODE = '123456';
         const SUPABASE_URL = 'https://ynujpxlvmgumxnsg.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InludWpweGx2bWd1bXhuc2ciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc0NjM2MTc1NywiZXhwIjoyMDYxOTM3NzU3fQ.example';
 
-        let supabase;
-        let activityChart;
+        var supabase;
+        var activityChart;
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check if already logged in
-            if (sessionStorage.getItem('adminLoggedIn') === 'true') {
-                showMainContent();
-            }
-
-            // Login handler - on input
-            document.getElementById('accessCode').addEventListener('input', (e) => {
-                if (e.target.value.length === 6) {
-                    tryLogin();
-                }
-            });
-
-            // Login handler - on Enter key
-            document.getElementById('accessCode').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    tryLogin();
-                }
-            });
-        });
-
+        // Login function - must be global for onclick
         function tryLogin() {
-            const code = document.getElementById('accessCode').value;
+            var code = document.getElementById('accessCode').value;
             if (code === ADMIN_CODE) {
                 sessionStorage.setItem('adminLoggedIn', 'true');
                 showMainContent();
@@ -735,17 +714,6 @@
                 document.getElementById('accessCode').value = '';
             }
         }
-
-        // Tab navigation
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-
-                tab.classList.add('active');
-                document.getElementById(tab.dataset.tab).classList.add('active');
-            });
-        });
 
         function showMainContent() {
             document.getElementById('loginOverlay').style.display = 'none';
@@ -758,6 +726,31 @@
             sessionStorage.removeItem('adminLoggedIn');
             location.reload();
         }
+
+        // Initialize when DOM ready
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check if already logged in
+            if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+                showMainContent();
+            }
+
+            // Tab navigation
+            var tabs = document.querySelectorAll('.nav-tab');
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].addEventListener('click', function () {
+                    var allTabs = document.querySelectorAll('.nav-tab');
+                    var allSections = document.querySelectorAll('.section');
+                    for (var j = 0; j < allTabs.length; j++) {
+                        allTabs[j].classList.remove('active');
+                    }
+                    for (var k = 0; k < allSections.length; k++) {
+                        allSections[k].classList.remove('active');
+                    }
+                    this.classList.add('active');
+                    document.getElementById(this.dataset.tab).classList.add('active');
+                });
+            }
+        });
 
         function initSupabase() {
             try {
