@@ -555,7 +555,8 @@
         <!-- Navigation -->
         <div class="nav-tabs">
             <button class="nav-tab active" data-tab="dashboard">📊 Dashboard</button>
-            <button class="nav-tab" data-tab="users">👥 Uživatelé</button>
+            <button class="nav-tab" data-tab="users">👥 Uživatele</button>
+            <button class="nav-tab" data-tab="leaderboards">🏆 Žebříčky</button>
             <button class="nav-tab" data-tab="config">⚙️ Nastavení</button>
             <button class="nav-tab" data-tab="multiplayer">🎮 Multiplayer</button>
         </div>
@@ -686,6 +687,71 @@
                         <tr>
                             <td colspan="5" style="text-align: center; color: rgba(255,255,255,0.5); padding: 40px;">
                                 Žádné aktivní zápasy
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Leaderboards Section -->
+        <section class="section" id="leaderboards">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="icon">🔥</div>
+                    <div class="value" id="leaderboardChallengeCount">0</div>
+                    <div class="label">Výzva - záznamy dnes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon">⛔</div>
+                    <div class="value" id="leaderboardMultiplayerCount">0</div>
+                    <div class="label">Multiplayer - záznamy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon">🥇</div>
+                    <div class="value" id="topScore">-</div>
+                    <div class="label">Nejvyšší skóre dnes</div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Mode Tabs -->
+            <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                <button class="nav-tab active" onclick="showLeaderboardMode('challenge')" id="lb-tab-challenge">🔥
+                    Výzva</button>
+                <button class="nav-tab" onclick="showLeaderboardMode('multiplayer')" id="lb-tab-multiplayer">👥
+                    Multiplayer</button>
+            </div>
+
+            <!-- Period Tabs -->
+            <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                <button class="nav-tab active" onclick="showLeaderboardPeriod('daily')" id="lb-period-daily">📅
+                    Denní</button>
+                <button class="nav-tab" onclick="showLeaderboardPeriod('weekly')" id="lb-period-weekly">📆
+                    Týdenní</button>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <h2 style="color: #fff;">🏆 Žebříček Výzva - Denní</h2>
+                    <button onclick="loadLeaderboard()"
+                        style="padding: 8px 16px; background: #8B1538; color: white; border: none; border-radius: 8px; cursor: pointer;">🔄
+                        Obnovit</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Jméno</th>
+                            <th>Skóre</th>
+                            <th>Period Key</th>
+                            <th>Datum</th>
+                            <th>Akce</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: rgba(255,255,255,0.5); padding: 40px;">
+                                Načítám žebříček...
                             </td>
                         </tr>
                     </tbody>
@@ -965,6 +1031,137 @@
                 row.style.display = text.includes(query) ? '' : 'none';
             });
         });
+
+        // =================== LEADERBOARD FUNCTIONS ===================
+
+        let currentLeaderboardMode = 'challenge';
+        let currentLeaderboardPeriod = 'daily';
+
+        function showLeaderboardMode(mode) {
+            currentLeaderboardMode = mode;
+            document.getElementById('lb-tab-challenge').classList.toggle('active', mode === 'challenge');
+            document.getElementById('lb-tab-multiplayer').classList.toggle('active', mode === 'multiplayer');
+            loadLeaderboard();
+        }
+
+        function showLeaderboardPeriod(period) {
+            currentLeaderboardPeriod = period;
+            document.getElementById('lb-period-daily').classList.toggle('active', period === 'daily');
+            document.getElementById('lb-period-weekly').classList.toggle('active', period === 'weekly');
+            loadLeaderboard();
+        }
+
+        async function loadLeaderboard() {
+            const today = new Date().toISOString().split('T')[0];
+            const weekNumber = getWeekNumber(new Date());
+            const periodKey = currentLeaderboardPeriod === 'daily' ? today : weekNumber;
+
+            try {
+                const { data, error } = await supabase
+                    .from('leaderboard_entries')
+                    .select('*')
+                    .eq('game_mode', currentLeaderboardMode)
+                    .eq('period_type', currentLeaderboardPeriod)
+                    .eq('period_key', periodKey)
+                    .order('score', { ascending: false })
+                    .limit(100);
+
+                if (error) throw error;
+
+                renderLeaderboardTable(data || []);
+                updateLeaderboardStats(data || []);
+
+            } catch (error) {
+                console.error('Leaderboard load error:', error);
+                document.getElementById('leaderboardTableBody').innerHTML = `
+                    <tr><td colspan="6" style="text-align: center; color: #ff6b6b; padding: 40px;">
+                        Chyba: ${error.message}
+                    </td></tr>
+                `;
+            }
+        }
+
+        function getWeekNumber(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+            return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
+        }
+
+        function renderLeaderboardTable(entries) {
+            const tbody = document.getElementById('leaderboardTableBody');
+            const modeName = currentLeaderboardMode === 'challenge' ? 'Výzva' : 'Multiplayer';
+            const periodName = currentLeaderboardPeriod === 'daily' ? 'Denní' : 'Týdenní';
+
+            // Update header
+            document.querySelector('#leaderboards .table-header h2').textContent = `🏆 Žebříček ${modeName} - ${periodName}`;
+
+            if (entries.length === 0) {
+                tbody.innerHTML = `
+                    <tr><td colspan="6" style="text-align: center; color: rgba(255,255,255,0.5); padding: 40px;">
+                        Žádné záznamy pro ${periodName.toLowerCase()} žebříček
+                    </td></tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = entries.map((entry, index) => {
+                const rank = index + 1;
+                const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
+                const created = new Date(entry.created_at).toLocaleString('cs');
+
+                return `
+                    <tr>
+                        <td>${medal}</td>
+                        <td><strong>${entry.username}</strong></td>
+                        <td style="color: #FFD700; font-weight: bold;">${entry.score.toLocaleString()} b.</td>
+                        <td style="opacity: 0.6;">${entry.period_key}</td>
+                        <td style="opacity: 0.6;">${created}</td>
+                        <td>
+                            <button onclick="deleteLeaderboardEntry('${entry.id}')" 
+                                    style="padding: 4px 8px; background: #ff4444; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                                🗑️
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function updateLeaderboardStats(entries) {
+            const challengeCount = entries.filter(e => e.game_mode === 'challenge').length;
+            const multiplayerCount = entries.filter(e => e.game_mode === 'multiplayer').length;
+            const topScore = entries.length > 0 ? entries[0].score : 0;
+
+            document.getElementById('leaderboardChallengeCount').textContent = entries.length;
+            document.getElementById('topScore').textContent = topScore > 0 ? topScore.toLocaleString() : '-';
+        }
+
+        async function deleteLeaderboardEntry(id) {
+            if (!confirm('Opravdu chcete smazat tento záznam?')) return;
+
+            try {
+                const { error } = await supabase
+                    .from('leaderboard_entries')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                loadLeaderboard();
+            } catch (error) {
+                alert('Chyba při mazání: ' + error.message);
+            }
+        }
+
+        // Load leaderboard when tab is clicked
+        const originalLoadData = loadData;
+        async function loadData() {
+            await originalLoadData?.();
+            loadLeaderboard();
+        }
     </script>
 </body>
 
